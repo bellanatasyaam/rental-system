@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\TenantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,5 @@ Route::get('/', function () {
 Route::Resource('companies', CompanyController::class);
 
 Route::resource('facilities', FacilityController::class);
+
+Route::resource('tenants', TenantController::class);
