@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('facilities', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('type');
+            $table->text('description')->nullable();
+            $table->decimal('cost', 10, 2);
+            $table->string('biling_type');
             $table->timestamps();
         });
     }
