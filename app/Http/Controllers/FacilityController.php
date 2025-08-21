@@ -9,10 +9,10 @@ class FacilityController extends Controller
 {
     // Tampilkan semua data fasilitas
     public function index()
-{
-    $facilities = Facility::paginate(10); // ambil 10 data per halaman
-    return view('facilities.index', compact('facilities'));
-}
+    {
+        $facilities = Facility::paginate(10); // ambil 10 data per halaman
+        return view('facilities.index', compact('facilities'));
+    }
 
     /**
      * Show the form for creating a new resource.
