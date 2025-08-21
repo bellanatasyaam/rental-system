@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CompanyResource;
@@ -12,8 +12,8 @@ class CompanyController extends Controller
     public function index()
     {
         $companies = Company::latest()->paginate(10);
-        return CompanyResource::collection(Company::paginate(10));
-        // return view('companies.index', compact('companies'));
+        // return CompanyResource::collection(Company::paginate(10));
+        return view('companies.index', compact('companies'));
     }
 
     public function create()
