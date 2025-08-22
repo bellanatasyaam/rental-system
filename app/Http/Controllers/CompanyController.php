@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use App\Http\Requests\CompanyRequest; // Ganti Request biasa ke CompanyRequest
+use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
@@ -21,23 +22,29 @@ class CompanyController extends Controller
         return view('companies.create');
     }
 
-    public function store(CompanyRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->validated();
-            if ($request->hasFile('logo')) {
-                $data['logo'] = $request->file('logo')->store('logos', 'public');
+        // Validasi dulu biar aman
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'address' => 'nullable|string',
+            'phone' => 'nullable|string',
+            'email' => 'nullable|email',
+            'tax_number' => 'nullable|string',
+        ]);
+
+        // kalau ada file logo
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $file->move(public_path('uploads/company_logos'), $filename);
+            $validated['logo'] = $filename;
         }
 
-        Company::create($data);
+        Company::create($validated);
 
-        // $request->validate([
-        //     'name' => 'required|string|max:255'
-        // ]);
-
-        // Company::create($request->all());
-
-        return redirect()->route('companies.index')
-            ->with('success', 'Company created successfully.');
+        return redirect()->route('companies.index')->with('success', 'Company created successfully!');
     }
 
     public function edit(Company $company)
@@ -47,14 +54,13 @@ class CompanyController extends Controller
 
     public function update(CompanyRequest $request, Company $company)
     {
-        $data = $request->validated();
+        $data = $request->all();
 
         if ($request->hasFile('logo')) {
-        // Hapus file lama jika ada
-            if ($company->logo && \Storage::disk('public')->exists($company->logo)) {
-            \Storage::disk('public')->delete($company->logo);
-            }
-            $data['logo'] = $request->file('logo')->store('logos', 'public');
+            $file = $request->file('logo');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $file->move(public_path('uploads'), $filename);
+            $data['logo'] = $filename;
         }
 
         $company->update($data);
