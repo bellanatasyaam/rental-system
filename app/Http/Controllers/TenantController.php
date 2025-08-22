@@ -75,6 +75,10 @@ class TenantController extends Controller
             'address' => 'required|string',
         ]);
 
+        // $tenant->update($request->only([
+        //     'name', 'contact_name', 'phone', 'email', 'address'
+        // ]));  
+
         $tenant = Tenant::findOrFail($id);
         $tenant->update($request->all());
 
