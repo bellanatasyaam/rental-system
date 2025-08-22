@@ -1,16 +1,21 @@
 @extends('layouts.app')
-@section('title','Add Company')
+
+@section('title','Add Property')
+
 @section('content')
 <div class="card">
-    <div class="card-header">Add Company</div>
+    <div class="card-header">Add Property</div>
     <div class="card-body">
-        <form action="{{ route('companies.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('properties.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            @include('companies.form')
-            <button type="submit" class="btn btn-success">Save</button>
-            <a href="{{ route('companies.index') }}" class="btn btn-secondary">Back</a>
+            @include('properties.form')
+            <button type="submit" class="btn btn-success">Create</button>
+            <a href="{{ route('properties.index') }}" class="btn btn-secondary">Back</a>
         </form>
-        
     </div>
 </div>
 @endsection
+<form action="{{ route('properties.store') }}" method="POST">
+    @csrf
+    @include('properties.form')
+    <button type="submit" class="btn btn-success">Save</button>
