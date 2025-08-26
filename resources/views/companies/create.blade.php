@@ -1,21 +1,38 @@
 @extends('layouts.app')
 
-@section('title','Add Property')
+@section('title','Add Company')
 
 @section('content')
-<div class="card">
-    <div class="card-header">Add Property</div>
-    <div class="card-body">
-        <form action="{{ route('properties.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @include('properties.form')
-            <button type="submit" class="btn btn-success">Create</button>
-            <a href="{{ route('properties.index') }}" class="btn btn-secondary">Back</a>
-        </form>
-    </div>
+<div class="container">
+    <h3>Add New Company</h3>
+    <form action="{{ route('companies.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+
+        <!-- Company Name -->
+        <div class="mb-3">
+            <label class="form-label">Company Name</label>
+            <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+        </div>
+
+        <!-- Jika ada form tambahan di companies.form -->
+        @include('companies.form', ['company' => null])
+
+        <!-- Buttons -->
+        <button type="submit" class="btn btn-primary">Save Company</button>
+        <a href="{{ route('companies.index') }}" class="btn btn-secondary">Cancel</a>
+    </form>
 </div>
 @endsection
-<form action="{{ route('properties.store') }}" method="POST">
-    @csrf
-    @include('properties.form')
-    <button type="submit" class="btn btn-success">Save</button>
+
+@push('scripts')
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    });
+    $(function(){
+        $('select').select2();
+    });
+</script>
+@endpush

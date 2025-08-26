@@ -1,7 +1,4 @@
-<div class="mb-3">
-    <label>Name</label>
-    <input type="text" name="name" class="form-control" value="{{ old('name',$company->name ?? '') }}" required>
-</div>
+
 <div class="mb-3">
     <label>Address</label>
     <textarea name="address" class="form-control">{{ old('address',$company->address ?? '') }}</textarea>

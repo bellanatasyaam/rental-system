@@ -5,7 +5,10 @@
 @section('content')
 <div class="d-flex justify-content-between mb-3">
     <h3>Company List</h3>
+    <div class="d-flex">
+        <button onclick="window.location.href='http://127.0.0.1:8000'" class="btn btn-secondary me-2">Home</button>
     <a href="{{ route('companies.create') }}" class="btn btn-primary">+ Add Company</a>
+    </div>
 </div>
 
 @if(session('success'))
