@@ -14,6 +14,15 @@
             </div>
 
             <div class="form-group mb-3">
+                <label for="gender">Gender</label>
+                <select name="gender" id="gender" class="form-control" required>
+                    <option value="">-- Pilih Gender --</option>
+                    <option value="Laki-laki" {{ $tenant->gender == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                    <option value="Perempuan" {{ $tenant->gender == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
                 <label for="contact_name">Contact Name</label>
                 <input type="text" name="contact_name" value="{{ $tenant->contact_name }}" class="form-control">
             </div>

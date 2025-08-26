@@ -23,8 +23,17 @@
             <input type="text" name="name" id="name" class="form-control" required>
         </div>
 
+        <div class="form-group mb-3">
+            <label for="gender">Gender</label>
+            <select name="gender" id="gender" class="form-control" required>
+                <option value="">-- Pilih Gender --</option>
+                <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+            </select>
+        </div>
+
         <div class="mb-3">
-            <label for="contact_name" class="form-label">Contact Name</label>
+            <label for="contact_name" class="form-label">Contact Person</label>
             <input type="text" name="contact_name" id="contact_name" class="form-control">
         </div>
 
