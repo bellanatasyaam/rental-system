@@ -15,6 +15,9 @@ class Facility extends Model
         'type',
         'description',
         'cost',
-        'biling_type'
+        'biling_type',
+        'room',
+        'floor',
+        'ac'
     ];
 }

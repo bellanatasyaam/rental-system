@@ -16,4 +16,9 @@ class Property extends Model
         'is_active' => 'boolean',
         'total_area' => 'decimal:2',
     ];
+
+    public function units()
+    {
+        return $this->hasMany(PropertyUnit::class, 'property_id');
+    }
 }

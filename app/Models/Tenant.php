@@ -15,4 +15,9 @@ class Tenant extends Model
         'id_card_number',
         'address'
     ];
+
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class, 'tenant_id');
+    }
 }
