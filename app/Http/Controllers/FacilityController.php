@@ -30,6 +30,9 @@ class FacilityController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:255',
+            'room' => 'nullable|string|max:255',
+            'floor' => 'nullable|string|max:255',
+            'ac' => 'required|in:AC,No AC',
             'description' => 'nullable|string',
             'cost' => 'required|numeric',
             'biling_type' => 'required|string|max:255',
@@ -63,11 +66,14 @@ class FacilityController extends Controller
     public function update(Request $request, Facility $facility)
     {
         $request->validate([
-            'name' => 'required',
-            'type' => 'required',
-            'description' => 'nullable',
+            'name' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'room' => 'nullable|string|max:255',
+            'floor' => 'nullable|string|max:255',
+            'ac' => 'required|in:AC,No AC',
+            'description' => 'nullable|string',
             'cost' => 'required|numeric',
-            'biling_type' => 'required',
+            'biling_type' => 'required|string|max:255',
         ]);
 
         $facility->update($request->all());

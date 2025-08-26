@@ -31,6 +31,7 @@ class TenantController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'gender' => 'required|in:Male,Female',
             'contact_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|max:255',
@@ -38,7 +39,16 @@ class TenantController extends Controller
             'address' => 'required|string',
         ]);
 
-        Tenant::create($request->all());
+        Tenant::create([
+            'name' => $request->name,
+            'gender' => $request->gender,
+            'contact_name' => $request->contact_name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'id_card_number' => $request->id_card_number,
+            'address' => $request->address,
+        ]);
+
 
         return redirect()->route('tenants.index')->with('success', 'Tenant created successfully.');
     }
@@ -68,6 +78,7 @@ class TenantController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'gender' => 'required',
             'contact_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|max:255',

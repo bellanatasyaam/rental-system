@@ -50,7 +50,8 @@ class PropertyController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $property = Property::with('units')->findOrFail($id);
+        return view('properties.show', compact('property'));
     }
 
     /**
@@ -97,4 +98,5 @@ class PropertyController extends Controller
 
         return redirect()->route('properties.index')->with('success', 'Property deleted successfully');
     }
+    
 }
