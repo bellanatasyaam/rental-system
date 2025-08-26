@@ -5,7 +5,10 @@
 @section('content')
 <div class="d-flex justify-content-between mb-3">
     <h3>Property List</h3>
-    <a href="{{ route('properties.create') }}" class="btn btn-primary">+ Add Property</a>
+    <div class="d-flex">
+        <button onclick="window.location.href='http://127.0.0.1:8000'" class="btn btn-secondary me-2">Home</button>
+        <a href="{{ route('properties.create') }}" class="btn btn-primary">+ Add Property</a>
+    </div>
 </div>
 
 @if(session('success'))
@@ -31,6 +34,7 @@
             <td>
                 <a href="{{ route('properties.edit', $property) }}" class="btn btn-sm btn-warning">Edit</a>
                 <button class="btn btn-sm btn-danger btn-delete" data-id="{{ $property->id }}">Delete</button>
+                <a href="{{ route('properties.show', $property->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
             </td>
         </tr>
         @endforeach
