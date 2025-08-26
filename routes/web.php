@@ -33,6 +33,7 @@ Route::resource('facilities', FacilityController::class);
 Route::get('/facilities/reset', [FacilityController::class, 'resetFacilities'])->name('facilities.reset');
 
 Route::resource('tenants', TenantController::class);
+Route::put('/tenants/{tenant}', [TenantController::class, 'update'])->name('tenants.update');
 
 Route::resource('properties', PropertyController::class);
 
