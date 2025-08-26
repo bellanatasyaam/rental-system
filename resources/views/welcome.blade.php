@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Bella</title>
+        <title>Home</title>
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script>
             $(document).ready(function() {
@@ -129,7 +129,120 @@
                                         
                                         <h2 class="mt-6 text-xl font-semibold text-gray-900">Properties</h2>
                                         <p class="mt-4 text-gray-700 text-sm leading-relaxed">
-                                            Oversee and update property information seamlessly
+                                            Oversee and update property information seamlessly.
+                                        </p>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 w-6 h-6 mx-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                                    </svg>
+                                </a>
+
+                                <a href="{{ route('property_units.index') }}" 
+                                class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
+                                    <div>
+                                        <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"  viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+                                                <circle cx="12" cy="12" r="20" fill="white" stroke="none"/>
+                                                <rect x="6" y="8" width="4" height="8" rx="1" />
+                                                <rect x="14" y="8" width="4" height="8" rx="1" />
+                                                <rect x="11" y="14" width="2" height="4" rx="0.5"/>
+                                            </svg>
+                                        </div>
+                                        
+                                        <h2 class="mt-6 text-xl font-semibold text-gray-900">Property Units</h2>
+                                        <p class="mt-4 text-gray-700 text-sm leading-relaxed">
+                                            Easily manage and track individual property units with precision.
+                                        </p>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 w-6 h-6 mx-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                                    </svg>
+                                </a>
+
+                                <a href="{{ route('contracts.index') }}" 
+                                class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
+                                    <div>
+                                        <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"  viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+                                                <circle cx="12" cy="12" r="20" fill="white" stroke="none"/>
+                                                <rect x="7" y="5" width="10" height="14" rx="1" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 9h6M9 13h6M9 17h4" />
+                                            </svg>
+                                        </div>
+                                        
+                                        <h2 class="mt-6 text-xl font-semibold text-gray-900">Contracts</h2>
+                                        <p class="mt-4 text-gray-700 text-sm leading-relaxed">
+                                            Organize and oversee contracts efficiently for seamless management.
+                                        </p>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 w-6 h-6 mx-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                                    </svg>
+                                </a>
+
+                                <a href="{{ route('payments.index') }}" 
+                                class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
+                                    <div>
+                                        <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"  viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+                                            <circle cx="12" cy="12" r="20" fill="white" stroke="none"/>
+                                            <rect x="4" y="8" width="16" height="8" rx="2" />
+                                            <line x1="4" y1="12" x2="20" y2="12" stroke-linecap="round"/>
+                                            <rect x="6" y="10" width="4" height="4" rx="0.5" />
+                                        </svg>
+                                        </div>
+                                        
+                                        <h2 class="mt-6 text-xl font-semibold text-gray-900">Payments</h2>
+                                        <p class="mt-4 text-gray-700 text-sm leading-relaxed">
+                                            Track, process, and manage payments securely and effortlessly.
+                                        </p>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 w-6 h-6 mx-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                                    </svg>
+                                </a>
+
+                                <a href="{{ route('property_unit_facilities.index') }}" 
+                                class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
+                                    <div>
+                                        <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"  viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+                                        <circle cx="12" cy="12" r="20" fill="white" stroke="none"/>
+                                        <!-- Property Unit: 2 blok persegi -->
+                                        <rect x="6" y="8" width="4" height="8" rx="1" />
+                                        <rect x="14" y="8" width="4" height="8" rx="1" />
+                                        <!-- Facilities: roda gear kecil -->
+                                        <circle cx="12" cy="7" r="3" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7h1M9 7h1M12 4v1M12 10v1"/>
+                                        </svg>
+                                        </div> 
+                                        <h2 class="mt-6 text-xl font-semibold text-gray-900">Property Unit Facilities</h2>
+                                        <p class="mt-4 text-gray-700 text-sm leading-relaxed">
+                                            Manage and organize individual property units and their facilities efficiently.
+                                        </p>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 w-6 h-6 mx-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                                    </svg>
+                                </a>
+
+                                <a href="{{ route('facility_usages.index') }}" 
+                                class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
+                                    <div>
+                                        <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"  viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+                                        <circle cx="12" cy="12" r="20" fill="white" stroke="none"/>
+                                        <!-- Property Unit: 2 blok persegi -->
+                                        <rect x="6" y="8" width="4" height="8" rx="1" />
+                                        <rect x="14" y="8" width="4" height="8" rx="1" />
+                                        <!-- Facilities: roda gear kecil -->
+                                        <circle cx="12" cy="7" r="3" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7h1M9 7h1M12 4v1M12 10v1"/>
+                                        </svg>
+                                        </div> 
+                                        <h2 class="mt-6 text-xl font-semibold text-gray-900">Facility Usages</h2>
+                                        <p class="mt-4 text-gray-700 text-sm leading-relaxed">
+                                            Manage and organize individual property units and their facilities efficiently.
                                         </p>
                                     </div>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 w-6 h-6 mx-6">
