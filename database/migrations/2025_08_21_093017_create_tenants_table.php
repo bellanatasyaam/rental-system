@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('gender', ['Male', 'Female'])->nullable()->after('name');
             $table->string('contact_name')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
@@ -20,7 +21,7 @@ return new class extends Migration
         });
 
         Schema::table('tenants', function (Blueprint $table) {
-            $cols = ['name','contact_name','phone','email','id_card_number','address'];
+            $cols = ['name','gender','contact_name','phone','email','id_card_number','address'];
             foreach ($cols as $col) {
                 if (!Schema::hasColumn('tenant', $col)) {
                     $table->string($col)->nullable();
@@ -36,7 +37,11 @@ return new class extends Migration
             foreach ($cols as $col) {
                 if (Schema::hasColumn('tenant', $col)) {
                     $table->dropColumn($col);
+                    $table->dropColumn('gender');
                 }
+            }
+            if (Schema::hasColumn('tenant', 'gender')) {
+                $table->dropColumn('gender');
             }
         });
     }
