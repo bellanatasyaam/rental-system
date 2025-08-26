@@ -32,6 +32,24 @@
         </div>
 
         <div class="mb-3">
+            <label for="ac" class="form-label">AC</label>
+            <select name="ac" id="ac" class="form-control" required>
+                <option value="AC" {{ old('ac', $facility->ac) == 'AC' ? 'selected' : '' }}>AC</option>
+                <option value="No AC" {{ old('ac', $facility->ac) == 'No AC' ? 'selected' : '' }}>No AC</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="room" class="form-label">Room</label>
+            <input type="text" class="form-control" id="room" name="room" value="{{ old('room', $facility->room) }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="floor" class="form-label">Floor</label>
+            <input type="text" class="form-control" id="floor" name="floor" value="{{ old('floor', $facility->floor) }}">
+        </div>
+
+        <div class="mb-3">
             <label for="type" class="form-label">Type</label>
             <input type="text" 
                    class="form-control @error('type') is-invalid @enderror" 
