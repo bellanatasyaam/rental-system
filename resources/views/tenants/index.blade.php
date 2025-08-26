@@ -21,11 +21,14 @@
             <th>ID</th>
             <th>Nama</th>
             <th>Gender</th>
-            <th>Contact Person</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>ID Card Number</th>
-            <th>Address</th>
+            <th>Agama</th>
+            <th>Pekerjaan</th>
+            <th>Status Perkawinan</th>
+            <th>Alamat Rumah Asal</th>
+            <th>No. Telp/HP</th>
+            <th>No. Kontak Darurat - Nama & Hubungan</th>
+            <th>Tanggal Mulai Huni/Sewa</th>
+            <th>No. KTP</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -35,11 +38,14 @@
             <td>{{ $tenant->id }}</td>
             <td>{{ $tenant->name }}</td>
             <td>{{ $tenant->gender ?? '-' }}</td>
-            <td>{{ $tenant->contact_name }}</td>
-            <td>{{ $tenant->phone }}</td>
-            <td>{{ $tenant->email }}</td>
-            <td>{{ $tenant->id_card_number }}</td>
-            <td>{{ $tenant->address }}</td>
+            <td>{{ $tenant->religion ?? '-' }}</td>
+            <td>{{ $tenant->occupation ?? '-' }}</td>
+            <td>{{ $tenant->marital_status ?? '-' }}</td>
+            <td>{{ $tenant->origin_address ?? '-' }}</td>
+            <td>{{ $tenant->phone ?? '-' }}</td>
+            <td>{{ $tenant->emergency_contact ?? '-' }}</td>
+            <td>{{ $tenant->rental_start_date ? \Carbon\Carbon::parse($tenant->rental_start_date)->format('d M Y') : '-' }}</td>
+            <td>{{ $tenant->id_card_number ?? '-' }}</td>
             <td class="text-center">
                 <div class="d-flex justify-content-center gap-2">
                     <a href="{{ route('tenants.show', $tenant->id) }}" class="btn btn-sm btn-info">View</a>
@@ -56,22 +62,20 @@
     </tbody>
 </table>
 
-<a>{{ $tenants->links() }}</a>
+<a>{{ $tenants->links() }}</a> 
 
 {{-- Pagination Laravel --}}
-<div class="d-flex justify-content-between align-items-center mt-3">
-</div>
+<div class="d-flex justify-content-between align-items-center mt-3"></div>
 @endsection
 
 @push('scripts')
 <script>
     $(document).ready(function() {
         $('#datatable').DataTable({
-            "paging": false,  // Nonaktifkan pagination bawaan DataTables
-            "info": false,    // Nonaktifkan info bawaan DataTables
-            "searching": true // Searching tetap aktif
+            "paging": false,
+            "info": false,
+            "searching": true
         });
     });
 </script>
 @endpush
-
