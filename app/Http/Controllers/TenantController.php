@@ -8,16 +8,16 @@ use Illuminate\Http\Request;
 class TenantController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of tenants.
      */
     public function index()
     {
         $tenants = Tenant::paginate(10); 
         return view('tenants.index', compact('tenants'));
     }
-    
+
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new tenant.
      */
     public function create()
     {
@@ -25,36 +25,33 @@ class TenantController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created tenant in storage.
      */
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:Male,Female',
+            'religion' => 'nullable|string|max:50',
+            'occupation' => 'nullable|string|max:100',
+            'marital_status' => 'nullable|string|max:50',
+            'origin_address' => 'nullable|string',
             'contact_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
+            'emergency_contact' => 'nullable|string|max:255',
+            'rental_start_date' => 'nullable|date',
             'email' => 'required|email|max:255',
             'id_card_number' => 'required|string|max:50',
             'address' => 'required|string',
         ]);
 
-        Tenant::create([
-            'name' => $request->name,
-            'gender' => $request->gender,
-            'contact_name' => $request->contact_name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'id_card_number' => $request->id_card_number,
-            'address' => $request->address,
-        ]);
-
+        Tenant::create($request->all());
 
         return redirect()->route('tenants.index')->with('success', 'Tenant created successfully.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified tenant.
      */
     public function show(string $id)
     {
@@ -63,7 +60,7 @@ class TenantController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified tenant.
      */
     public function edit(string $id)
     {
@@ -72,32 +69,34 @@ class TenantController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified tenant in storage.
      */
     public function update(Request $request, string $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'gender' => 'required',
+            'gender' => 'required|in:Laki-laki,Perempuan',
+            'religion' => 'nullable|string|max:50',
+            'occupation' => 'nullable|string|max:100',
+            'marital_status' => 'nullable|string|max:50',
+            'origin_address' => 'nullable|string',
             'contact_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
+            'emergency_contact' => 'nullable|string|max:255',
+            'rental_start_date' => 'nullable|date',
             'email' => 'required|email|max:255',
             'id_card_number' => 'required|string|max:50',
             'address' => 'required|string',
         ]);
-
-        // $tenant->update($request->only([
-        //     'name', 'contact_name', 'phone', 'email', 'address'
-        // ]));  
-
-        $tenant = Tenant::findOrFail($id);
-        $tenant->update($request->all());
-
-        return redirect()->route('tenants.index')->with('success', 'Tenant updated successfully.');
+        
+        
+    $tenant = Tenant::findOrFail($id);
+    $tenant->update($request->all());
+    return redirect()->route('tenants.index')->with('success', 'Tenant updated!');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified tenant from storage.
      */
     public function destroy(string $id)
     {
@@ -106,4 +105,4 @@ class TenantController extends Controller
 
         return redirect()->route('tenants.index')->with('success', 'Tenant deleted successfully.');
     }
-};
+}
