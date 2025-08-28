@@ -8,7 +8,8 @@
     <h3>Property Unit List</h3>
     <div class="d-flex">
         <button onclick="window.location.href='http://127.0.0.1:8000'" class="btn btn-secondary me-2">Home</button>
-        <a href="{{ route('property_units.create') }}" class="btn btn-primary">+ Add Property Unit</a>
+        <td><a href="{{ route('property_units.manage') }}" class="btn btn-success me-2">Manage Kamar</a></td>
+        <td><a href="{{ route('property_units.create') }}" class="btn btn-primary">+ Add Property Unit</a></td>
     </div>
 </div>
 
