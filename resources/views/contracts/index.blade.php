@@ -3,11 +3,15 @@
 @section('title', 'Contracts List')
 
 @section('content')
-<div class="d-flex justify-content-between mb-3">
+    <div class="d-flex justify-content-between mb-3">
     <h3>Contracts List</h3>
     <div class="d-flex">
-    <button onclick="window.location.href='http://127.0.0.1:8000'" class="btn btn-secondary me-2">Home</button>
-    <a href="{{ route('contracts.create') }}" class="btn btn-primary">+ Add Contract</a></div>
+        <button onclick="window.location.href='http://127.0.0.1:8000'" class="btn btn-secondary me-2">Home</button>
+        <div class="d-flex justify-content-center gap-2">
+        <td><a href="{{ route('contracts.create') }}" class="btn btn-primary">+ Add Contract</a></td>
+        <td><a href="{{ route('contracts.print') }}" class="btn btn-primary">Print Contract</a></td>
+        </div>
+    </div>
 </div>
 
 {{-- Success Message --}}
@@ -21,7 +25,7 @@
             <th>ID</th>
             <th>Property Unit</th>
             <th>Tenant</th>
-            <th>Contract No</th>
+            <th hidden>Contract No</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Monthly Rent</th>
@@ -41,7 +45,7 @@
                 <small class="text-muted">{{ $contract->propertyUnit->name ?? '-' }}</small>
             </td>
             <td>{{ $contract->tenant->name ?? '-' }}</td>
-            <td>{{ $contract->contract_number ?? '-' }}</td>
+            <td hidden>{{ $contract->contract_number ?? '-' }}</td>
             <td>{{ \Carbon\Carbon::parse($contract->start_date)->format('d M Y') }}</td>
             <td>{{ \Carbon\Carbon::parse($contract->end_date)->format('d M Y') }}</td>
             <td>Rp {{ number_format($contract->monthly_rent, 0, ',', '.') }}</td>
@@ -56,6 +60,7 @@
                     <span class="badge bg-warning text-dark">Pending</span>
                 @endif
             </td>
+
             <td class="text-center">
                 <div class="d-flex">
                     {{-- Tombol Edit --}}
@@ -68,6 +73,12 @@
                     <a href="{{ route('contracts.show', $contract->id) }}" 
                        class="btn btn-info btn-sm me-1 text-white">
                         <i class="bi bi-eye"></i> Detail
+                    </a>    
+
+                    {{-- Tombol Print --}}
+                    <a href="{{ route('contracts.print.one', $contract->id) }}" 
+                       class="btn btn-info btn-sm me-1 text-white">
+                        <i class="bi bi-eye"></i> 🖨 Print
                     </a>
 
                     {{-- Tombol Delete --}}

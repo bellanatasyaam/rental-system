@@ -7,9 +7,9 @@
     <h3>Contract Details</h3>
     <div class="card">
         <div class="card-body">
-            <p><strong>Tenant Name:</strong> {{ $contract->tenant_name }}</p>
-            <p><strong>Tenant Phone:</strong> {{ $contract->tenant_phone }}</p>
-            <p><strong>Unit:</strong> {{ $contract->unit->unit_code ?? '-' }}</p>
+            <p><strong>Tenant Name:</strong> {{ $contract->tenant->name }}</p>
+            <p><strong>Tenant Phone:</strong> {{ $contract->tenant->phone }}</p>
+            <p><strong>Unit:</strong> {{ $contract->propertyUnit->unit_code ?? '-' }}</p>
             <p><strong>Start Date:</strong> {{ $contract->start_date }}</p>
             <p><strong>End Date:</strong> {{ $contract->end_date }}</p>
             <p><strong>Monthly Rent:</strong> Rp {{ number_format($contract->monthly_rent, 0, ',', '.') }}</p>

@@ -46,9 +46,12 @@
             <input type="number" name="monthly_rent" value="{{ $contract->monthly_rent }}" class="form-control" required>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Deposit</label>
-            <input type="number" name="deposit" value="{{ $contract->deposit }}" class="form-control" required>
+        <div class="form-group">
+            <label for="deposit_amount">Deposit</label>
+            <input type="number" step="0.01" class="form-control" id="deposit_amount"
+                name="deposit_amount"
+                value="{{ old('deposit_amount', $contract->deposit_amount) }}"
+                required>
         </div>
 
         <div class="mb-3">
