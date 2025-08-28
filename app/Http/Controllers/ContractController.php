@@ -7,6 +7,7 @@ use App\Models\Tenant;
 use App\Models\PropertyUnit;
 use Illuminate\Http\Request;
 
+
 class ContractController extends Controller
 {
     /**
@@ -17,6 +18,29 @@ class ContractController extends Controller
         $contracts = Contract::with(['tenant', 'propertyUnit'])->paginate(10);
         return view('contracts.index', compact('contracts'));
     }
+
+        // Print semua contract
+    public function print()
+    {
+        $contracts = Contract::all();
+
+        $pdf = \PDF::loadView('contracts.print', compact('contracts'))
+                ->setPaper('A4', 'landscape');
+
+        return $pdf->stream('contracts.pdf');
+    }
+
+    // Print 1 contract
+    public function printOne($id)
+    {
+        $contract = Contract::with(['tenant', 'propertyUnit'])->findOrFail($id);
+
+        $pdf = \PDF::loadView('contracts.print_one', compact('contract'))
+                ->setPaper('A4', 'portrait');
+
+        return $pdf->stream('contract-'.$contract->id.'.pdf');
+    }
+
 
     /**
      * Form tambah kontrak baru.
@@ -41,7 +65,7 @@ class ContractController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'monthly_rent' => 'required|numeric',
-            'deposit' => 'required|numeric',
+            'deposit_amount' => 'required|numeric', // ✅ hanya pakai deposit_amount
             'status' => 'required|in:active,ended'
         ]);
 
@@ -76,13 +100,16 @@ class ContractController extends Controller
     
     public function update(Request $request, Contract $contract)
     {
+
         $validated = $request->validate([
-            'tenant_id' => 'required|exists:tenants,id',
             'property_unit_id' => 'required|exists:property_units,id',
+            'tenant_id' => 'required|exists:tenants,id',
+            'contract_number' => 'nullable|string|max:50',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'monthly_rent' => 'required|numeric|min:0',
-            'deposit' => 'required|numeric|min:0',
+            'deposit_amount' => 'required|numeric|min:0',
+            'payment_due_day' => 'nullable|integer|min:1|max:31',
             'status' => 'required|in:active,ended',
         ]);
 
