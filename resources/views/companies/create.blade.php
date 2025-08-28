@@ -14,6 +14,12 @@
             <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
         </div>
 
+        <!-- Company Address -->
+        <div class="mb-3">
+            <label class="form-label">Company Address</label>
+            <textarea name="address" class="form-control" rows="3">{{ old('address') }}</textarea>
+        </div>
+
         <!-- Jika ada form tambahan di companies.form -->
         @include('companies.form', ['company' => null])
 

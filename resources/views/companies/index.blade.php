@@ -18,7 +18,12 @@
 <table id="datatable" class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Action</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +31,7 @@
         <tr>
             <td>{{ $company->id }}</td>
             <td>{{ $company->name }}</td>
+            <td> {{ $address = Str::limit($company->address, 50) }} </td>
             <td>{{ $company->phone }}</td>
             <td>{{ $company->email }}</td>
             <td>

@@ -13,17 +13,26 @@
                 <input type="text" name="name" value="{{ $company->name }}" class="form-control" required>
             </div>
 
-                <!-- form upload logo -->
             <div class="form-group">
-                <label for="logo">Company Logo</label>
-                <input type="file" name="logo" class="form-control">
-
-                <!-- @if($company->logo)
-                    <p>Current Logo:</p>
-                    <img src="{{ asset('uploads/logos/'.$company->logo) }}" width="120">
-                @endif -->
+                <label for="address">Address</label>
+                <textarea name="address" class="form-control">{{ old('address',$company->address ?? '') }}</textarea>
             </div>
-            
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" name="phone" value="{{ $company->phone }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" value="{{ $company->email }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tax_number">Tax Number</label>
+                <input type="text" name="tax_number" value="{{ $company->tax_number }}" class="form-control" required>
+            </div>
+
             @include('companies.form',['company'=>$company])
             <button type="submit" class="btn btn-success">Update</button>
             <a href="{{ route('companies.index') }}" class="btn btn-secondary">Back</a>
@@ -43,4 +52,24 @@ $(function(){
     $('select').select2();
 });
 </script>
-@endpush
+@endpush    
+
+@error('name')
+    <small class="text-danger">{{ $message }}</small>
+@enderror
+
+@error('address')
+    <small class="text-danger">{{ $message }}</small>
+@enderror
+
+@error('phone')
+    <small class="text-danger">{{ $message }}</small>
+@enderror
+
+@error('email')
+    <small class="text-danger">{{ $message }}</small>
+@enderror
+
+@error('tax_number')
+    <small class="text-danger">{{ $message }}</small>
+@enderror
