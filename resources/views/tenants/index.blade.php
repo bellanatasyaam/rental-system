@@ -7,7 +7,10 @@
     <h3>Tenant List</h3>
     <div class="d-flex">
         <button onclick="window.location.href='{{ url('/') }}'" class="btn btn-secondary me-2">Home</button>
-        <a href="{{ route('tenants.create') }}" class="btn btn-primary">+ Add Tenant</a>
+        <div class="d-flex justify-content-center gap-2">
+        <td><a href="{{ route('tenants.create') }}" class="btn btn-primary">+ Add Tenant</a></td>
+        <td><a href="{{ route('tenants.print') }}" class="btn btn-primary">Print Tenant</a></td>
+        </div>
     </div>
 </div>
 
@@ -15,7 +18,8 @@
 <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
-<table id="datatable" class="table table-bordered table-striped">
+<div class="table-responsive">
+    <table id="datatable" class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>ID</th>
@@ -48,6 +52,7 @@
             <td>{{ $tenant->id_card_number ?? '-' }}</td>
             <td class="text-center">
                 <div class="d-flex justify-content-center gap-2">
+                    <a href="{{ route('tenants.print.one', $tenant->id) }}" class="btn btn-sm btn-primary" target="_blank">🖨 Print</a>
                     <a href="{{ route('tenants.show', $tenant->id) }}" class="btn btn-sm btn-info">View</a>
                     <a href="{{ route('tenants.edit', $tenant->id) }}" class="btn btn-sm btn-warning">Edit</a>
                     <form action="{{ route('tenants.destroy', $tenant->id) }}" method="POST" onsubmit="return confirm('Yakin ingin hapus tenant ini?')">
@@ -60,15 +65,70 @@
         </tr>
         @endforeach
     </tbody>
-</table>
+    </table>
+
+    <div id="datatable-footer" class="d-flex justify-content-between mt-2">
+        <div id="datatable-info"></div>
+        <div id="datatable-paginate"></div>
+    </div>
+
+</div>
 
 <a>{{ $tenants->links() }}</a> 
 
-{{-- Pagination Laravel --}}
-<div class="d-flex justify-content-between align-items-center mt-3"></div>
+
+@push('styles')
+<style>
+.table-fixed {
+    table-layout: fixed;
+    width: 100%;
+}
+table th, table td {
+    vertical-align: middle;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Set lebar kolom */
+table th:nth-child(1), table td:nth-child(1) { width: 50px; }
+table th:nth-child(2), table td:nth-child(2) { width: 150px; }
+table th:nth-child(3), table td:nth-child(3) { width: 80px; }
+table th:nth-child(4), table td:nth-child(4) { width: 100px; }
+table th:nth-child(5), table td:nth-child(5) { width: 120px; }
+table th:nth-child(6), table td:nth-child(6) { width: 120px; }
+table th:nth-child(7), table td:nth-child(7) { width: 200px; }
+table th:nth-child(8), table td:nth-child(8) { width: 120px; }
+table th:nth-child(9), table td:nth-child(9) { width: 200px; }
+table th:nth-child(10), table td:nth-child(10) { width: 120px; }
+table th:nth-child(11), table td:nth-child(11) { width: 120px; }
+table th:nth-child(12), table td:nth-child(12) { width: 180px; }
+</style>
+@endpush
+
+@push('styles')
+<style>
+table th, table td {
+    vertical-align: middle;
+    text-align: center;
+}
+table td:first-child {
+    text-align: center;
+}
+table td:nth-child(2),
+table td:nth-child(7) {
+    text-align: left;
+}
+.btn-sm {
+    min-width: 60px;
+}
+</style>
+@endpush
+
+
+
 @endsection
 
-@push('scripts')
+<!-- @push('scripts')
 <script>
     $(document).ready(function() {
         $('#datatable').DataTable({
@@ -78,4 +138,4 @@
         });
     });
 </script>
-@endpush
+@endpush -->
