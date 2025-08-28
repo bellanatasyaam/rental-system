@@ -24,27 +24,11 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi dulu biar aman
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string',
-            'email' => 'nullable|email',
-            'tax_number' => 'nullable|string',
-        ]);
+        $data = $request->only(['name','address','phone','email','tax_number']);
+        Company::create($data);
 
-        // kalau ada file logo
-        if ($request->hasFile('logo')) {
-            $file = $request->file('logo');
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('uploads/company_logos'), $filename);
-            $validated['logo'] = $filename;
-        }
-
-        Company::create($validated);
-
-        return redirect()->route('companies.index')->with('success', 'Company created successfully!');
+        return redirect()->route('companies.index')
+            ->with('success', 'Company created successfully!');
     }
 
     public function edit(Company $company)
@@ -54,22 +38,8 @@ class CompanyController extends Controller
 
     public function update(CompanyRequest $request, Company $company)
     {
-        $data = $request->all();
-
-        if ($request->hasFile('logo')) {
-            $file = $request->file('logo');
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename);
-            $data['logo'] = $filename;
-        }
-
+        $data = $request->only(['name','address','phone','email','tax_number']);
         $company->update($data);
-
-        // $request->validate([
-        //     'name' => 'required|string|max:255'
-        // ]);
-
-        // $company->update($request->all());
 
         return redirect()->route('companies.index')
             ->with('success', 'Company updated successfully.');
