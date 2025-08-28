@@ -15,6 +15,5 @@ class Company extends Model
         'phone',
         'email',
         'tax_number',
-        'logo',
     ];
 };

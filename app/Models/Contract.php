@@ -16,7 +16,7 @@ class Contract extends Model
         'start_date',
         'end_date',
         'monthly_rent',
-        'deposit_amount',
+        'deposit_amount', // ✅ cukup pakai ini
         'payment_due_day',
         'status'
     ];
@@ -30,6 +30,11 @@ class Contract extends Model
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 
     // // Relasi ke property unit
