@@ -86,4 +86,51 @@ class PropertyUnitController extends Controller
 
         return redirect()->route('property_units.index')->with('success', 'Property unit deleted successfully!');
     }
+
+    public function manage(Request $request)
+    {
+        $propertyId = $request->get('property_id');
+
+        $properties = Property::all();
+
+        // Ambil semua units + status real-time berdasarkan kontrak
+        $units = PropertyUnit::with('contracts')
+            ->when($propertyId, function ($query) use ($propertyId) {
+                $query->where('property_id', $propertyId);
+            })
+            ->get()
+            ->map(function ($unit) {
+                // Cek apakah ada kontrak aktif
+                $activeContract = $unit->contracts
+                    ->where('status', 'active')
+                    ->where('start_date', '<=', now())
+                    ->where('end_date', '>=', now())
+                    ->first();
+
+                // Kalau ada kontrak aktif, status occupied
+                $unit->status = $activeContract ? 'occupied' : 'available';
+                return $unit;
+            });
+
+        return view('property_units.manage', compact('properties', 'units', 'propertyId'));
+    }
+
+    public function bookUnit(Request $request, $id)
+    {
+        $unit = PropertyUnit::findOrFail($id);
+
+        if ($unit->status === 'occupied') {
+            return response()->json(['error' => 'Kamar sudah ditempati!']);
+        }
+
+        if ($unit->status === 'nonaktif') {
+            return response()->json(['error' => 'Kamar ini nonaktif!']);
+        }
+
+        // Ubah status kamar jadi occupied
+        $unit->status = 'occupied';
+        $unit->save();
+
+        return response()->json(['success' => 'Kamar berhasil dibooking!']);
+    }
 }
