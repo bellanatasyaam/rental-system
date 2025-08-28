@@ -1,24 +1,28 @@
 <?php
-
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CompanyRequest extends FormRequest
 {
     public function authorize()
     {
-        // Bisa diubah sesuai kebutuhan, default true agar validasi jalan
-        return true;
+        return true; // biar request bisa dijalankan
     }
 
     public function rules()
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:companies,email,' . $this->company, // unik kecuali untuk data company yang sedang diupdate
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('companies')->ignore($this->company->id ?? null), // ignore company yang sedang diupdate
+            ],
             'phone' => 'required|numeric|digits_between:10,15',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // max 2MB
+            'address' => 'nullable|string',
+            'tax_number' => 'nullable|string',
         ];
     }
 
@@ -35,24 +39,3 @@ class CompanyRequest extends FormRequest
         ];
     }
 }
-
-//     /**
-//      * Determine if the user is authorized to make this request.
-//      */
-//     public function authorize(): bool
-//     {
-//         return false;
-//     }
-
-//     /**
-//      * Get the validation rules that apply to the request.
-//      *
-//      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-//      */
-//     public function rules(): array
-//     {
-//         return [
-//             //
-//         ];
-//     }
-// }
