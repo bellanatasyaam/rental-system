@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\User;
+use App\Models\Contract;
+use App\Notifications\ContractExpiringNotification;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\FacilityController;
@@ -25,6 +29,33 @@ use App\Http\Controllers\FacilityUsageController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/test-notif', function () {
+    $admin = User::first();
+    $contract = Contract::first();
+
+    if (!$admin) {
+        return "Gagal: User belum ada!";
+    }
+
+    if (!$contract) {
+        return "Gagal: Contract belum ada!";
+    }
+
+    $admin->notify(new ContractExpiringNotification($contract));
+
+    return "✅ Notifikasi berhasil dikirim ke {$admin->name}";
+    });
+
+Route::post('/notifications/read', function () {
+    // Karena kamu gak punya fitur login, kita pakai user pertama
+    $admin = User::first();
+    if ($admin) {
+        $admin->unreadNotifications->markAsRead();
+    }
+    return back();
+})->name('notifications.read');
+
 
 Route::Resource('companies', CompanyController::class);
 
