@@ -6,10 +6,17 @@ use App\Models\Contract;
 use App\Models\Tenant;
 use App\Models\PropertyUnit;
 use Illuminate\Http\Request;
-
+use App\Contracts\PdfGeneratorInterface;
 
 class ContractController extends Controller
 {
+    protected $pdfGenerator;
+
+    public function __construct(PdfGeneratorInterface $pdfGenerator)
+    {
+        $this->pdfGenerator = $pdfGenerator;
+    }
+    
     /**
      * Tampilkan daftar kontrak.
      */
@@ -33,12 +40,11 @@ class ContractController extends Controller
     // Print 1 contract
     public function printOne($id)
     {
-        $contract = Contract::with(['tenant', 'propertyUnit'])->findOrFail($id);
-
-        $pdf = \PDF::loadView('contracts.print_one', compact('contract'))
-                ->setPaper('A4', 'portrait');
-
-        return $pdf->stream('contract-'.$contract->id.'.pdf');
+        try {
+            return $this->pdfGenerator->generatePdf($id);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to generate PDF: ' . $e->getMessage());
+        }
     }
 
 
