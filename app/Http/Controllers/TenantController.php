@@ -63,7 +63,7 @@ class TenantController extends Controller
      * Show the form for creating a new tenant.
      */
     public function create()
-    {
+    {   
         return view('tenants.create');
     }
 
@@ -73,7 +73,7 @@ class TenantController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:tenants,name',
             'gender' => 'required|in:Male,Female',
             'religion' => 'nullable|string|max:50',
             'occupation' => 'nullable|string|max:100',
@@ -117,7 +117,7 @@ class TenantController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'nullable|string|max:255',
+            'name' => 'nullable|string|max:255|Rule::unique(\'tenants\',\'name\')->ignore($tenant->id)',
             'gender' => 'nullable|in:Laki-laki,Perempuan',
             'religion' => 'nullable|string|max:50',
             'occupation' => 'nullable|string|max:100',
