@@ -132,4 +132,21 @@ class ContractController extends Controller
             ->route('contracts.index')
             ->with('success', 'Contract deleted successfully!');
     }
+
+    public function checkExpiringContracts()
+    {
+        $today = Carbon::today();
+        $upcomingContracts = Contract::whereDate('end_date', '<=', $today->copy()->addDays(7))->get();
+
+        foreach ($upcomingContracts as $contract) {
+            // Ambil admin (atau user tertentu)
+            $user = User::where('role', 'admin')->first();
+
+            if ($user) {
+                $user->notify(new ContractExpiringNotification($contract));
+            }
+        }
+
+        return response()->json(['message' => 'Notifikasi kontrak berhasil dikirim']);
+    }
 }
