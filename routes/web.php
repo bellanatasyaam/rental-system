@@ -14,6 +14,10 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PropertyUnitController;
 use App\Http\Controllers\PropertyUnitFacilityController;
 use App\Http\Controllers\FacilityUsageController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +30,23 @@ use App\Http\Controllers\FacilityUsageController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// route umum
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+})->middleware(['auth'])->name('admin.dashboard');
 
+// Route::get('/', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
+
+Route::get('/contracts', [ContractController::class, 'index'])->middleware('role:Admin|Staff');
+
+// hanya yg punya permission
+Route::get('/reports', function () {
+    return view('reports.index');
+})->middleware('permission:view reports');
+
+// notifikasi testing
 Route::get('/test-notif', function () {
     $admin = User::first();
     $contract = Contract::first();
@@ -47,8 +64,9 @@ Route::get('/test-notif', function () {
     return "✅ Notifikasi berhasil dikirim ke {$admin->name}";
     });
 
+// nandai notifikasi sbg sudah dibaca
 Route::post('/notifications/read', function () {
-    // Karena kamu gak punya fitur login, kita pakai user pertama
+    // pakai user pertama
     $admin = User::first();
     if ($admin) {
         $admin->unreadNotifications->markAsRead();
@@ -56,11 +74,31 @@ Route::post('/notifications/read', function () {
     return back();
 })->name('notifications.read');
 
+// ROUTE KHUSUS ADMIN
+Route::group(['middleware' => ['role:Admin']], function() {
+    Route::resource('users', UserController::class);
+    Route::resource('companies', CompanyController::class);
+});
 
-Route::Resource('companies', CompanyController::class);
+// ROUTE YANG MEMBUTUHKAN AUTENTIKASI
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// ROUTE KHUSUS ADMIN & STAFF
+Route::get('/contracts', [ContractController::class, 'index'])->middleware('role:Admin|Staff');
+
+// ROUTE DENGAN PERMISSION
+Route::get('/reports', function () {
+    return view('reports.index');
+})->middleware('permission:view reports');
+
+// ROUTE RESOURCE LAINNYA
+Route::resource('reports', ReportController::class);
 
 Route::resource('facilities', FacilityController::class);
-
 Route::get('/facilities/reset', [FacilityController::class, 'resetFacilities'])->name('facilities.reset');
 
 // === TENANTS ===
@@ -68,6 +106,7 @@ Route::get('/tenants/print', [TenantController::class, 'print'])->name('tenants.
 Route::get('/tenants/print/{id}', [TenantController::class, 'printOne'])->name('tenants.print.one');
 Route::resource('tenants', TenantController::class);
 
+// === PROPERTIES ===
 Route::resource('properties', PropertyController::class);
 
 // === PROPERTY UNITS ===
@@ -76,13 +115,18 @@ Route::post('/property_units/{id}/book', [App\Http\Controllers\PropertyUnitContr
 Route::resource('property_units', PropertyUnitController::class);
 // Route::delete('property_units/{id}', [PropertyUnitController::class, 'destroy'])->name('property_units.destroy');
 
+// === PAYMENTS ===
+Route::resource('payments', PaymentController::class);
+
 // === CONTRACTS ===
 Route::get('/contracts/print', [ContractController::class, 'print'])->name('contracts.print');  
 Route::get('/contracts/print/{id}', [ContractController::class, 'printOne'])->name('contracts.print.one');
 Route::resource('contracts', ContractController::class);
 
-Route::resource('payments', PaymentController::class);
-
+// === PROPERTY UNIT FACILITIES ===
 Route::resource('property_unit_facilities', PropertyUnitFacilityController::class);
 
+// === FACILITY USAGES ===
 Route::resource('facility_usages', FacilityUsageController::class);
+
+require __DIR__.'/auth.php';
