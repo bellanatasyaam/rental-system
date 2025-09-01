@@ -6,24 +6,24 @@ use Illuminate\Http\Request;
  
 use Session;
  
-class NotifController extends Controller
+class NotificationController extends Controller
 {
 	public function index(){
-		return view('notifikasi');
+		return view('notifications.index');
 	}
     
 	public function success(){
 		Session::flash('success','Ini notifikasi SUCCESS');
-		return redirect('pesan');
+		return redirect('notifications');
 	}
 
 	public function warning(){
 		Session::flash('warning','Ini notifikasi WARNING');
-		return redirect('pesan');
+		return redirect('notifications');
 	}
 
 	public function failed(){
 		Session::flash('failed','Ini notifikasi FAILED');
-		return redirect('pesan');
+		return redirect('notifications');
 	}
 }
