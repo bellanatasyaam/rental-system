@@ -22,12 +22,18 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/'); // redirect ke dashboard
+
+            $user = Auth::user();
+            if ($user->hasRole('admin')) return redirect()->route('admin.dashboard');
+            if ($user->hasRole('staff')) return redirect()->route('staff.dashboard');
+            if ($user->hasRole('tenant')) return redirect()->route('tenant.dashboard');
+
+            return redirect('/'); // fallback
         }
 
         return back()->withErrors([
             'email' => 'Email atau password salah!',
-        ]);
+        ])->onlyInput('email');
     }
 
     public function logout(Request $request)
@@ -35,6 +41,6 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }
