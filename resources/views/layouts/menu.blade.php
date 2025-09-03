@@ -10,40 +10,38 @@
         <a class="nav-link" href="{{ url('/') }}">Dashboard</a>
     </li>
 
-    {{-- Menu Users - Hanya Admin yang bisa lihat --}}
+    {{-- Menu - Hanya Admin yang bisa lihat --}}
     @role('Admin')
         <li class="nav-item">
+            <a class="nav-link" href="{{ route('companies.index') }}">Manage Companies</a>
+            <a class="nav-link" href="{{ route('facilities.index') }}">Manage Facilities</a>
+            <a class="nav-link" href="{{ route('tenants.index') }}">Manage Tenants</a>
+            <a class="nav-link" href="{{ route('properties.index') }}">Manage Properties</a>
+            <a class="nav-link" href="{{ route('property_units.index') }}">Manage Property Units</a>
+            <a class="nav-link" href="{{ route('contracts.index') }}">Manage Contracts</a>
+            <a class="nav-link" href="{{ route('payments.index') }}">Manage Payments</a>
+            <a class="nav-link" href="{{ route('property_unit_facilities.index') }}">Manage Property Unit Facilities</a>
+            <a class="nav-link" href="{{ route('facility_usages.index') }}">Manage Facility Usages</a>
             <a class="nav-link" href="{{ route('users.index') }}">Manage Users</a>
+            <a class="nav-link" href="{{ route('roles.index') }}">Manage Roles</a>
+            <a class="nav-link" href="{{ route('reports.index') }}">Reports</a>
         </li>
     @endrole
 
-    {{-- Menu Tenants - Hanya Staff & Admin --}}
-    @hasanyrole('Staff|Admin')
+    {{-- Menu - Hanya Staff --}}
+    @hasanyrole('Staff')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('tenants.index') }}">Manage Tenants</a>
-        </li>
-    @endhasanyrole
-
-    {{-- Menu Properties - Khusus Admin --}}
-    @role('Admin')
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('properties.index') }}">Manage Properties</a>
-        </li>
-    @endrole
-
-    {{-- Menu Contracts - Admin & Staff --}}
-    @hasanyrole('Admin|Staff')
-        <li class="nav-item">
             <a class="nav-link" href="{{ route('contracts.index') }}">Contracts</a>
         </li>
     @endhasanyrole
 
-    {{-- Menu Reports - Hanya Admin --}}
-    @can('view reports')
+    {{-- Menu - Khusus Tenants --}}
+    @role('Tenant')
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('reports.index') }}">Reports</a>
+            <a class="nav-link" href="{{ route('tenants.index') }}">Manage Tenants</a>
         </li>
-    @endcan
+    @endrole
 
 </ul>
 {{-- End of layouts/menu.blade.php --}}
