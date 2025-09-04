@@ -3,76 +3,134 @@
 @section('title', 'Property List')
 
 @section('content')
-<div class="d-flex justify-content-between mb-3">
-    <h3>Property List</h3>
-    <div class="d-flex">
-        <button onclick="window.location.href='http://127.0.0.1:8000'" class="btn btn-secondary me-2">Home</button>
-        <a href="{{ route('properties.create') }}" class="btn btn-primary">+ Add Property</a>
+<div class="flex justify-center items-center w-full px-6 py-6">
+    <div class="w-11/12 md:w-10/12 lg:w-9/12">
+        
+        {{-- Header --}}
+        <div class="flex justify-between items-center mb-5">
+            <h3 class="text-2xl font-bold text-gray-900">Property List</h3>
+            <div class="flex gap-3">
+                <a href="{{ url('/') }}"
+                   class="bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-lg shadow" style="margin-left: 20px;">
+                    Home
+                </a>
+                <a href="{{ route('properties.create') }}"
+                   class="bg-blue-600 hover:bg-blue-500 text-black px-4 py-2 rounded-lg shadow" style="margin-left: 20px;">
+                    + Add Property
+                </a>
+            </div>
+        </div>
+        <br>
+
+        {{-- Alert sukses --}}
+        @if(session('success'))
+        <div class="bg-green-600 text-white p-3 rounded-lg shadow mb-4">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        {{-- Table Wrapper --}}
+        <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-300">
+            <table id="datatable" class="min-w-full table-auto border-collapse bg-gray-100 text-gray-900 text-sm mx-auto rounded-lg">
+                <thead class="bg-gray-300 text-gray-900 uppercase text-sm">
+                    <tr>
+                        <th class="px-4 py-3">ID</th>
+                        <th class="px-4 py-3">Code</th>
+                        <th class="px-4 py-3">Name</th>
+                        <th class="px-4 py-3">Address</th>
+                        <th class="px-4 py-3">Type</th>
+                        <th class="px-4 py-3">Total Area</th>
+                        <th class="px-4 py-3">Active</th>
+                        <th class="px-4 py-3 text-center w-36">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-300 text-gray-900">
+                    @forelse($properties as $property)
+                    <tr class="hover:bg-gray-200 transition">
+                        <td class="px-4 py-3 text-center">{{ $property->id }}</td>
+                        <td class="px-4 py-3">{{ $property->code }}</td>
+                        <td class="px-4 py-3 font-semibold">{{ $property->name }}</td>
+                        <td class="px-4 py-3">{{ Str::limit($property->address, 40) }}</td>
+                        <td class="px-4 py-3 text-center">{{ $property->type }}</td>
+                        <td class="px-4 py-3 text-center">{{ $property->total_area }}</td>
+                        <td class="px-4 py-3 text-center">
+                            @if($property->is_active)
+                                <span class="bg-green-200 text-green-700 px-2 py-1 rounded-full text-xs">Active</span>
+                            @else
+                                <span class="bg-red-200 text-red-700 px-2 py-1 rounded-full text-xs">Inactive</span>
+                            @endif
+                        </td>
+
+                        {{-- Tombol Action --}}
+                        <td class="px-4 py-3 text-center">
+                            <div class="flex justify-center gap-2">
+                                {{-- Detail --}}
+                                <a href="{{ route('properties.show', $property->id) }}"
+                                   class="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded-full shadow transition-transform transform hover:scale-110"
+                                   title="Lihat Detail">
+                                    👁
+                                </a>
+
+                                {{-- Edit --}}
+                                <a href="{{ route('properties.edit', $property->id) }}"
+                                   class="bg-yellow-400 hover:bg-yellow-300 text-black p-2 rounded-full shadow transition-transform transform hover:scale-110"
+                                   title="Edit">
+                                    ✏
+                                </a>
+
+                                {{-- Delete --}}
+                                <form action="{{ route('properties.destroy', $property->id) }}" method="POST"
+                                      onsubmit="return confirm('Yakin ingin hapus property ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="bg-red-500 hover:bg-red-400 text-white p-2 rounded-full shadow transition-transform transform hover:scale-110"
+                                            title="Delete">
+                                        🗑
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8" class="px-4 py-3 text-center text-gray-600">
+                            Tidak ada property.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Paginasi --}}
+        <div class="mt-4 flex justify-center">
+            {{ $properties->links() }}
+        </div>
     </div>
 </div>
-
-@if(session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
-@endif
-
-<table id="datatable" class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th><th>Code</th><th>Name</th><th>Address</th><th>Type</th><th>Total Area</th><th>Active</th><th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($properties as $property)
-        <tr>
-            <td>{{ $property->id }}</td>
-            <td>{{ $property->code }}</td>
-            <td>{{ $property->name }}</td>
-            <td>{{ $property->address }}</td>
-            <td>{{ $property->type }}</td>
-            <td>{{ $property->total_area }}</td>
-            <td>{{ $property->is_active ? 'Yes' : 'No' }}</td>
-            <td>
-                <a href="{{ route('properties.edit', $property) }}" class="btn btn-sm btn-warning">Edit</a>
-                <button class="btn btn-sm btn-danger btn-delete" data-id="{{ $property->id }}">Delete</button>
-                <a href="{{ route('properties.show', $property->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
-
-{{ $properties->links() }}
 @endsection
+
+@push('style')
+<style>
+    table th, table td {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    /* Kolom action dikunci lebarnya */
+    table th:last-child, table td:last-child {
+        width: 140px;
+        text-align: center;
+    }
+</style>
+@endpush
 
 @push('scripts')
 <script>
     $(document).ready(function() {
-        $('#datatable').DataTable();
-    });
-
-    $(function(){
-        $('.btn-delete').click(function(){
-            let id = $(this).data('id');
-            Swal.fire({
-                title: 'Delete this property?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '/properties/'+id,
-                        type: 'DELETE',
-                        data: { _token: '{{ csrf_token() }}' },
-                        success: function(res){
-                            if(res.success){
-                                Swal.fire('Deleted!','Property removed.','success')
-                                    .then(()=> location.reload());
-                            }
-                        }
-                    });
-                }
-            });
+        $('#datatable').DataTable({
+            "pageLength": 10
         });
     });
 </script>
