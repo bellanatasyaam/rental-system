@@ -28,8 +28,11 @@ return new class extends Migration
             if (!Schema::hasColumn('tenants', 'emergency_contact')) {
                 $table->string('emergency_contact')->nullable()->after('phone');
             }
+            if (!Schema::hasColumn('tenants', 'email')) {
+                $table->string('email')->nullable()->after('emergency_contact');
+            }
             if (!Schema::hasColumn('tenants', 'rental_start_date')) {
-                $table->date('rental_start_date')->nullable()->after('emergency_contact');
+                $table->date('rental_start_date')->nullable()->after('email');
             }
             if (!Schema::hasColumn('tenants', 'id_card_number')) {
                 $table->string('id_card_number')->nullable()->after('rental_start_date');
