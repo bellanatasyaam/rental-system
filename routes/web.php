@@ -104,12 +104,23 @@ Route::middleware('auth')->group(function () {
     Route::resource('facility_usages', FacilityUsageController::class);
 
     // Tenants Print
+    Route::resource('tenants', TenantController::class);
     Route::get('/tenants/print', [TenantController::class, 'print'])->name('tenants.print');
     Route::get('/tenants/print/{id}', [TenantController::class, 'printOne'])->name('tenants.print.one');
 
     // Contracts Print
     Route::get('/contracts/print', [ContractController::class, 'print'])->name('contracts.print');
     Route::get('/contracts/print/{id}', [ContractController::class, 'printOne'])->name('contracts.print.one');
+
+    // Contract Reminder
+    Route::get('/contracts/{id}/reminder', [ContractController::class, 'sendReminder'])->name('contracts.reminder');
+    Route::get('/test-mail', function() {
+    Mail::raw('Ini test email Laravel', function($message) {
+        $message->to('bellanatasyaam@gmail.com')  // ganti dengan email kamu sendiri
+                ->subject('Test Email');
+    });
+    return 'Email berhasil dikirim!';
+    });
 });
 
 
