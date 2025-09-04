@@ -1,10 +1,5 @@
 {{-- resources/views/admin/dashboard.blade.php --}}
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-900 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
 <br><br>
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -32,7 +27,7 @@
                                 </svg>
                                 </a>
 
-                <a href="{{ route('facilities.index') }}" 
+            <a href="{{ route('facilities.index') }}" 
                                 class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
                                     <div>
                                         <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
@@ -53,7 +48,7 @@
                                     </svg>
                                 </a>
 
-                                <a href="{{ route('tenants.index') }}" 
+            <a href="{{ route('tenants.index') }}" 
                                 class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
                                     <div>
                                         <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
@@ -74,7 +69,7 @@
                                     </svg>
                                 </a>
 
-                                                                <a href="{{ route('properties.index') }}" 
+            <a href="{{ route('properties.index') }}" 
                                 class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
                                     <div>
                                         <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
@@ -95,7 +90,7 @@
                                     </svg>
                                 </a>
 
-                <a href="{{ route('property_units.index') }}" 
+            <a href="{{ route('property_units.index') }}" 
                                 class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
                                     <div>
                                         <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
@@ -117,7 +112,7 @@
                                     </svg>
                                 </a>
 
-                                <a href="{{ route('contracts.index') }}" 
+            <a href="{{ route('contracts.index') }}" 
                                 class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
                                     <div>
                                         <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
@@ -138,7 +133,7 @@
                                     </svg>
                                 </a>
 
-                                <a href="{{ route('payments.index') }}" 
+            <a href="{{ route('payments.index') }}" 
                                 class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
                                     <div>
                                         <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
@@ -160,7 +155,7 @@
                                     </svg>
                                 </a>
 
-                                <a href="{{ route('property_unit_facilities.index') }}" 
+            <a href="{{ route('property_unit_facilities.index') }}" 
                                 class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
                                     <div>
                                         <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
@@ -184,29 +179,29 @@
                                     </svg>
                                 </a>
 
-                                <a href="{{ route('facility_usages.index') }}" 
-                                class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
-                                    <div>
-                                        <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"  viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
-                                        <circle cx="12" cy="12" r="20" fill="white" stroke="none"/>
-                                        <!-- Property Unit: 2 blok persegi -->
-                                        <rect x="6" y="8" width="4" height="8" rx="1" />
-                                        <rect x="14" y="8" width="4" height="8" rx="1" />
-                                        <!-- Facilities: roda gear kecil -->
-                                        <circle cx="12" cy="7" r="3" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7h1M9 7h1M12 4v1M12 10v1"/>
-                                        </svg>
-                                        </div> 
-                                        <h2 class="mt-6 text-xl font-semibold text-gray-900">Facility Usages</h2>
-                                        <p class="mt-4 text-gray-700 text-sm leading-relaxed">
-                                            Manage and organize individual property units and their facilities efficiently.
-                                        </p>
-                                    </div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 w-6 h-6 mx-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
-                                    </svg>
-                                </a>
+            <a href="{{ route('facility_usages.index') }}" 
+                    class="scale-100 p-6 bg-gray-100 rounded-lg shadow-lg shadow-2xl shadow-gray-500/20 flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-grey-500">
+                            <div>
+                                <div class="h-16 w-16 bg-white flex items-center justify-center rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none"  viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+                                <circle cx="12" cy="12" r="20" fill="white" stroke="none"/>
+                                <!-- Property Unit: 2 blok persegi -->
+                                <rect x="6" y="8" width="4" height="8" rx="1" />
+                                <rect x="14" y="8" width="4" height="8" rx="1" />
+                                <!-- Facilities: roda gear kecil -->
+                                <circle cx="12" cy="7" r="3" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 7h1M9 7h1M12 4v1M12 10v1"/>
+                                </svg>
+                                </div> 
+                                <h2 class="mt-6 text-xl font-semibold text-gray-900">Facility Usages</h2>
+                                <p class="mt-4 text-gray-700 text-sm leading-relaxed">
+                                    Manage and organize individual property units and their facilities efficiently.
+                                </p>
+                            </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 w-6 h-6 mx-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                                </svg>
+                </a>
 
             </div>
         </div>
