@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContractReminderMail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Contract;
 use App\Models\Tenant;
 use App\Models\PropertyUnit;
@@ -16,6 +18,32 @@ class ContractController extends Controller
     {
         $this->pdfGenerator = $pdfGenerator;
     }
+
+    public function sendReminder($id)
+    {
+    // Ambil data kontrak + tenant
+    $contract = Contract::with('tenant')->findOrFail($id);
+
+    // Pastikan tenant punya email
+    if (!$contract->tenant || !$contract->tenant->email) {
+        return redirect()->back()->with('error', 'Tenant tidak memiliki email.');
+    }
+
+    // Kirim email pengingat
+    Mail::raw(
+        "Halo {$contract->tenant->name},\n\n".
+        "Ini adalah pengingat untuk pembayaran kontrak sewa Anda.\n".
+        "Tanggal jatuh tempo: {$contract->end_date}.\n\n".
+        "Mohon segera lakukan pembayaran sebelum tanggal tersebut.\n\n".
+        "Terima kasih.",
+        function ($message) use ($contract) {
+            $message->to($contract->tenant->email)
+                    ->subject('Pengingat Pembayaran Kontrak');
+        }
+    );
+
+    return redirect()->back()->with('success', 'Email pengingat berhasil dikirim!');
+    }
     
     /**
      * Tampilkan daftar kontrak.
@@ -29,11 +57,14 @@ class ContractController extends Controller
         // Print semua contract
     public function print()
     {
-        $contracts = Contract::all();
+        // Ambil semua kontrak lengkap dengan relasinya
+        $contracts = Contract::with(['propertyUnit', 'tenant'])->get();
 
+        // Generate PDF dari view contracts/print.blade.php
         $pdf = \PDF::loadView('contracts.print', compact('contracts'))
                 ->setPaper('A4', 'landscape');
 
+        // Tampilkan PDF di browser
         return $pdf->stream('contracts.pdf');
     }
 

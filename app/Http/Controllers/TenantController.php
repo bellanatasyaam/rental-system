@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
@@ -116,8 +117,15 @@ class TenantController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $tenant = Tenant::findOrFail($id);
+        
         $request->validate([
-            'name' => 'nullable|string|max:255|Rule::unique(\'tenants\',\'name\')->ignore($tenant->id)',
+            'name' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('tenants', 'name')->ignore($tenant->id),
+            ],
             'gender' => 'nullable|in:Laki-laki,Perempuan',
             'religion' => 'nullable|string|max:50',
             'occupation' => 'nullable|string|max:100',
@@ -127,7 +135,12 @@ class TenantController extends Controller
             'phone' => 'nullable|string|max:20',
             'emergency_contact' => 'nullable|string|max:255',
             // 'rental_start_date' => 'nullable|date',
-            // 'email' => 'nullable|email|max:255',
+            'email' => [
+            'nullable',
+            'email',
+            'max:255',
+            Rule::unique('tenants', 'email')->ignore($tenant->id), // <--- Tambah validasi email unik
+            ],
             'id_card_number' => 'nullable|string|max:50',
             'address' => 'nullable|string',
         ]);
