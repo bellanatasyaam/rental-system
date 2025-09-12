@@ -47,8 +47,8 @@
                         <th class="px-4 py-3">Monthly Rent</th>
                         <th class="px-4 py-3">Deposit</th>
                         <th class="px-4 py-3">Payment Due</th>
-                        <th class="px-4 py-3">Status</th>
-                        <th class="px-4 py-3 text-center w-44">Action</th>
+                        <th class="px-4 py-3 text-center">Status</th>
+                        <th class="px-4 py-3 text-center w-52">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-300 text-gray-900">
@@ -66,36 +66,38 @@
                         <td class="px-4 py-3 text-right">Rp {{ number_format($contract->monthly_rent, 0, ',', '.') }}</td>
                         <td class="px-4 py-3 text-right">Rp {{ number_format($contract->deposit_amount, 0, ',', '.') }}</td>
                         <td class="px-4 py-3 text-center">{{ $contract->payment_due_day }}</td>
-                        <td class="px-4 py-3 text-center">
-                        <td>
-                            <a href="{{ route('contracts.reminder', $contract->id) }}" class="btn btn-warning btn-sm">
-                                Kirim Email Pengingat
-                            </a>
-                        </td>
-                        </td>
+
+                        {{-- Status --}}
                         <td class="px-4 py-3 text-center">
                             @if($contract->status === 'active')
-                                <span class="bg-green-200 text-green-700 px-2 py-1 rounded-full text-xs">Active</span>
+                                <span class="bg-green-200 text-green-700 px-3 py-1 rounded-full text-xs">Active</span>
                             @elseif($contract->status === 'ended')
-                                <span class="bg-gray-300 text-gray-700 px-2 py-1 rounded-full text-xs">Ended</span>
+                                <span class="bg-gray-300 text-gray-700 px-3 py-1 rounded-full text-xs">Ended</span>
                             @else
-                                <span class="bg-yellow-200 text-yellow-700 px-2 py-1 rounded-full text-xs">Pending</span>
+                                <span class="bg-yellow-200 text-yellow-700 px-3 py-1 rounded-full text-xs">Pending</span>
                             @endif
                         </td>
 
-                        {{-- Tombol Action --}}
+                        {{-- Action --}}
                         <td class="px-4 py-3 text-center">
                             <div class="flex justify-center gap-2">
+                                {{-- Kirim Email --}}
+                                <a href="{{ route('contracts.reminder', $contract->id) }}"
+                                   class="bg-purple-500 hover:bg-purple-400 text-white p-2 rounded-full shadow"
+                                   title="Kirim Email Pengingat">
+                                    📧
+                                </a>
+
                                 {{-- Detail --}}
                                 <a href="{{ route('contracts.show', $contract->id) }}"
-                                   class="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded-full shadow transition-transform transform hover:scale-110"
+                                   class="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded-full shadow"
                                    title="Detail">
                                     👁
                                 </a>
 
                                 {{-- Edit --}}
                                 <a href="{{ route('contracts.edit', $contract->id) }}"
-                                   class="bg-yellow-400 hover:bg-yellow-300 text-black p-2 rounded-full shadow transition-transform transform hover:scale-110"
+                                   class="bg-yellow-400 hover:bg-yellow-300 text-black p-2 rounded-full shadow"
                                    title="Edit">
                                     ✏
                                 </a>
@@ -103,7 +105,7 @@
                                 {{-- Print --}}
                                 <a href="{{ route('contracts.print.one', $contract->id) }}"
                                    target="_blank"
-                                   class="bg-green-500 hover:bg-green-400 text-white p-2 rounded-full shadow transition-transform transform hover:scale-110"
+                                   class="bg-green-500 hover:bg-green-400 text-white p-2 rounded-full shadow"
                                    title="Print">
                                     🖨
                                 </a>
@@ -114,7 +116,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                            class="bg-red-500 hover:bg-red-400 text-white p-2 rounded-full shadow transition-transform transform hover:scale-110"
+                                            class="bg-red-500 hover:bg-red-400 text-white p-2 rounded-full shadow"
                                             title="Delete">
                                         🗑
                                     </button>
@@ -141,12 +143,6 @@
 </div>
 @endsection
 
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
 @push('style')
 <style>
     table th, table td {
@@ -154,9 +150,9 @@
         vertical-align: middle;
     }
 
-    /* Kolom action dikunci lebarnya */
+    /* Kolom Action */
     table th:last-child, table td:last-child {
-        width: 170px;
+        width: 220px;
         text-align: center;
     }
 </style>
