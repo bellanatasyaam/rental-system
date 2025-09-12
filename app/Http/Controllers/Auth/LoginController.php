@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -43,4 +44,22 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('login');
     }
+
+    protected function authenticated($request, $user)
+    {
+        switch (strtolower($user->role)) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'staff':
+                return redirect()->route('staff.dashboard');
+            case 'tenant':
+                return redirect()->route('tenant.dashboard');
+            default:
+                auth()->logout();
+                return redirect()->route('login')->withErrors([
+                    'role' => 'Role tidak dikenali.',
+                ]);
+        }
+    }
+
 }
