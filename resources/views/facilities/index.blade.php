@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
 @section('title','Facility List')
 
@@ -7,7 +7,7 @@
     <div class="w-11/12 md:w-10/12 lg:w-9/12">
         {{-- Header --}}
         <div class="flex justify-between items-center mb-5">
-            <h3 class="text-2xl font-bold text-gray-900">Facility List</h3>
+            <h3 class="text-2xl font-bold text-gray-900" style="font-size: 36px;">Facility List</h3>
             <div class="flex gap-3">
                 <a href="{{ url('/') }}"
                    class="bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-lg shadow">
@@ -68,7 +68,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-md text-sm shadow">
+                                        class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-md text-sm shadow" style="margin-left: 10px;">
                                     Delete
                                 </button>
                             </form>

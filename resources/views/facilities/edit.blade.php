@@ -3,96 +3,129 @@
 @section('title', 'Edit Facility')
 
 @section('content')
-<div class="container mt-4">
-    <h2>Edit Facility</h2>
+<div class="max-w-4xl mx-auto mt-6">
+    <div class="bg-white shadow-md rounded-xl border border-gray-200">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-600 to-blue-500 rounded-t-xl">
+            <h1 class="text-xl font-bold text-white">Edit Facility</h1>
+        </div>
 
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+        <!-- Body -->
+        <div class="p-6">
+            @if ($errors->any())
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded-lg mb-4">
+                    <p class="font-semibold">Please fix the following errors:</p>
+                    <ul class="mt-2 list-disc list-inside text-sm">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('facilities.update', $facility->id) }}" method="POST" class="space-y-5">
+                @csrf
+                @method('PUT')
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Name -->
+                    <div>
+                        <label for="name" class="block font-semibold text-gray-700">Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="name" name="name"
+                            value="{{ old('name', $facility->name) }}"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror"
+                            required>
+                        @error('name')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- AC -->
+                    <div>
+                        <label for="ac" class="block font-semibold text-gray-700">AC</label>
+                        <select id="ac" name="ac"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="AC" {{ old('ac', $facility->ac) == 'AC' ? 'selected' : '' }}>AC</option>
+                            <option value="No AC" {{ old('ac', $facility->ac) == 'No AC' ? 'selected' : '' }}>No AC</option>
+                        </select>
+                    </div>
+
+                    <!-- Room -->
+                    <div>
+                        <label for="room" class="block font-semibold text-gray-700">Room</label>
+                        <input type="text" id="room" name="room"
+                            value="{{ old('room', $facility->room) }}"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Floor -->
+                    <div>
+                        <label for="floor" class="block font-semibold text-gray-700">Floor</label>
+                        <input type="text" id="floor" name="floor"
+                            value="{{ old('floor', $facility->floor) }}"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Type -->
+                    <div>
+                        <label for="type" class="block font-semibold text-gray-700">Type <span class="text-red-500">*</span></label>
+                        <input type="text" id="type" name="type"
+                            value="{{ old('type', $facility->type) }}"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('type') border-red-500 @enderror"
+                            required>
+                        @error('type')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Cost -->
+                    <div>
+                        <label for="cost" class="block font-semibold text-gray-700">Cost <span class="text-red-500">*</span></label>
+                        <input type="number" step="0.01" id="cost" name="cost"
+                            value="{{ old('cost', $facility->cost) }}"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('cost') border-red-500 @enderror"
+                            required>
+                        @error('cost')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Biling Type -->
+                    <div>
+                        <label for="biling_type" class="block font-semibold text-gray-700">Billing Type <span class="text-red-500">*</span></label>
+                        <input type="text" id="biling_type" name="biling_type"
+                            value="{{ old('biling_type', $facility->biling_type) }}"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('biling_type') border-red-500 @enderror"
+                            required>
+                        @error('biling_type')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="description" class="block font-semibold text-gray-700">Description</label>
+                    <textarea id="description" name="description" rows="3"
+                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('description') border-red-500 @enderror">{{ old('description', $facility->description) }}</textarea>
+                    @error('description')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex justify-end space-x-3 pt-4">
+                    <a href="{{ route('facilities.index') }}"
+                        class="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg transition">
+                        Cancel
+                    </a>
+                    <button type="submit"
+                        class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-black rounded-lg shadow transition" style="margin-left: 20px;">
+                        Update Facility
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    @endif
-
-    <form action="{{ route('facilities.update', $facility->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" 
-                   class="form-control @error('name') is-invalid @enderror" 
-                   id="name" name="name" 
-                   value="{{ old('name', $facility->name) }}" required>
-            @error('name')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="ac" class="form-label">AC</label>
-            <select name="ac" id="ac" class="form-control" required>
-                <option value="AC" {{ old('ac', $facility->ac) == 'AC' ? 'selected' : '' }}>AC</option>
-                <option value="No AC" {{ old('ac', $facility->ac) == 'No AC' ? 'selected' : '' }}>No AC</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="room" class="form-label">Room</label>
-            <input type="text" class="form-control" id="room" name="room" value="{{ old('room', $facility->room) }}">
-        </div>
-
-        <div class="mb-3">
-            <label for="floor" class="form-label">Floor</label>
-            <input type="text" class="form-control" id="floor" name="floor" value="{{ old('floor', $facility->floor) }}">
-        </div>
-
-        <div class="mb-3">
-            <label for="type" class="form-label">Type</label>
-            <input type="text" 
-                   class="form-control @error('type') is-invalid @enderror" 
-                   id="type" name="type" 
-                   value="{{ old('type', $facility->type) }}" required>
-            @error('type')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control @error('description') is-invalid @enderror" 
-                      id="description" name="description" rows="3">{{ old('description', $facility->description) }}</textarea>
-            @error('description')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="cost" class="form-label">Cost</label>
-            <input type="number" step="0.01" 
-                   class="form-control @error('cost') is-invalid @enderror" 
-                   id="cost" name="cost" 
-                   value="{{ old('cost', $facility->cost) }}" required>
-            @error('cost')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="biling_type" class="form-label">Biling Type</label>
-            <input type="text" 
-                   class="form-control @error('biling_type') is-invalid @enderror" 
-                   id="biling_type" name="biling_type" 
-                   value="{{ old('biling_type', $facility->biling_type) }}" required>
-            @error('biling_type')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <button type="submit" class="btn btn-primary">Update Facility</button>
-        <a href="{{ route('facilities.index') }}" class="btn btn-secondary">Cancel</a>
-    </form>
 </div>
 @endsection
