@@ -1,75 +1,110 @@
 @extends('layouts.app')
-@section('title','Edit Company')
+
+@section('title', 'Edit Company')
+
 @section('content')
-<div class="card">
-    <div class="card-header">Edit Company</div>
-    <div class="card-body">
-        <form action="{{ route('companies.update',$company) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+<div class="max-w-3xl mx-auto mt-6">
+    <div class="bg-white shadow-md rounded-xl border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-500 rounded-t-xl">
+            <h1 class="text-xl font-bold text-white">Edit Company</h1>
+        </div>
 
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" name="name" value="{{ $company->name }}" class="form-control" required>
-            </div>
+        <div class="p-6">
+            <form action="{{ route('companies.update', $company) }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+                @csrf
+                @method('PUT')
 
-            <div class="form-group">
-                <label for="address">Address</label>
-                <textarea name="address" class="form-control">{{ old('address',$company->address ?? '') }}</textarea>
-            </div>
+                {{-- Name --}}
+                <div>
+                    <label for="name" class="block font-semibold text-gray-700">Name <span class="text-red-500">*</span></label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        value="{{ old('name', $company->name) }}" 
+                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror" 
+                        required
+                    >
+                    @error('name')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
-            <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="text" name="phone" value="{{ $company->phone }}" class="form-control" required>
-            </div>
+                {{-- Address --}}
+                <div>
+                    <label for="address" class="block font-semibold text-gray-700">Address</label>
+                    <textarea 
+                        name="address" 
+                        rows="3" 
+                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('address') border-red-500 @enderror"
+                    >{{ old('address', $company->address ?? '') }}</textarea>
+                    @error('address')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" value="{{ $company->email }}" class="form-control" required>
-            </div>
+                {{-- Phone --}}
+                <div>
+                    <label for="phone" class="block font-semibold text-gray-700">Phone <span class="text-red-500">*</span></label>
+                    <input 
+                        type="text" 
+                        name="phone" 
+                        value="{{ old('phone', $company->phone) }}" 
+                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('phone') border-red-500 @enderror" 
+                        required
+                    >
+                    @error('phone')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
-            <div class="form-group">
-                <label for="tax_number">Tax Number</label>
-                <input type="text" name="tax_number" value="{{ $company->tax_number }}" class="form-control" required>
-            </div>
+                {{-- Email --}}
+                <div>
+                    <label for="email" class="block font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        value="{{ old('email', $company->email) }}" 
+                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror" 
+                        required
+                    >
+                    @error('email')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
-            @include('companies.form',['company'=>$company])
-            <button type="submit" class="btn btn-success">Update</button>
-            <a href="{{ route('companies.index') }}" class="btn btn-secondary">Back</a>
-        </form>
+                {{-- Tax Number --}}
+                <div>
+                    <label for="tax_number" class="block font-semibold text-gray-700">Tax Number <span class="text-red-500">*</span></label>
+                    <input 
+                        type="text" 
+                        name="tax_number" 
+                        value="{{ old('tax_number', $company->tax_number) }}" 
+                        class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('tax_number') border-red-500 @enderror" 
+                        required
+                    >
+                    @error('tax_number')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Include Additional Form Fields --}}
+                @include('companies.form', ['company' => $company])
+
+                {{-- Buttons --}}
+                <div class="flex justify-end space-x-3 pt-4">
+                    <a href="{{ route('companies.index') }}" class="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg">Back</a>
+                    <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-black rounded-lg" style="margin-left: 20px;">Update</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
 
 @push('scripts')
 <script>
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        }
+    $(document).ready(function() {
+        $('select').select2();
     });
-$(function(){
-    $('select').select2();
-});
 </script>
-@endpush    
-
-@error('name')
-    <small class="text-danger">{{ $message }}</small>
-@enderror
-
-@error('address')
-    <small class="text-danger">{{ $message }}</small>
-@enderror
-
-@error('phone')
-    <small class="text-danger">{{ $message }}</small>
-@enderror
-
-@error('email')
-    <small class="text-danger">{{ $message }}</small>
-@enderror
-
-@error('tax_number')
-    <small class="text-danger">{{ $message }}</small>
-@enderror
+@endpush

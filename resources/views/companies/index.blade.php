@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Company List')
 
@@ -6,13 +6,12 @@
 <div class="flex justify-center items-center w-full px-6 py-6">
     <div class="w-11/12 md:w-10/12 lg:w-8/12">
         <div class="flex justify-between items-center mb-5">
-            <h3 class="text-2xl font-bold text-gray-900">Company List</h3>
+            <h3 class="text-2xl font-bold text-gray-900" style="font-size: 25px">COMPANY LIST</h3>
             <a href="{{ route('companies.create') }}" 
                class="bg-blue-600 hover:bg-blue-500 text-black px-4 py-2 rounded-lg shadow">
                + Add Company
             </a>
         </div>
-        <br>
 
         {{-- Alert Sukses --}}
         @if(session('success'))
@@ -50,7 +49,7 @@
                                Edit
                             </a>
                             <button data-id="{{ $company->id }}"
-                                class="btn-delete bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-md text-sm shadow">
+                                class="btn-delete bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-md text-sm shadow" style="margin-left: 10px;">
                                 Delete
                             </button>
                         </td>
