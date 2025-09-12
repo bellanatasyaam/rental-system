@@ -5,7 +5,12 @@ use App\Models\Contract;
 use App\Notifications\ContractExpiringNotification;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\{
+    ForgotPasswordController,
+    ResetPasswordController,
+    GoogleController,
+    LoginController
+};
 
 use App\Http\Controllers\{
     CompanyController,
@@ -104,13 +109,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('facility_usages', FacilityUsageController::class);
 
     // Tenants Print
-    Route::resource('tenants', TenantController::class);
-    Route::get('/tenants/print', [TenantController::class, 'print'])->name('tenants.print');
-    Route::get('/tenants/print/{id}', [TenantController::class, 'printOne'])->name('tenants.print.one');
+    Route::get('/tenants-print', [TenantController::class, 'print'])->name('tenants.print');
+    Route::get('/tenants-print/{id}', [TenantController::class, 'printOne'])->name('tenants.print.one');
 
     // Contracts Print
-    Route::get('/contracts/print', [ContractController::class, 'print'])->name('contracts.print');
-    Route::get('/contracts/print/{id}', [ContractController::class, 'printOne'])->name('contracts.print.one');
+    Route::get('/contracts-print', [ContractController::class, 'print'])->name('contracts.print');
+    Route::get('/contracts-print/{id}', [ContractController::class, 'printOne'])->name('contracts.print.one');
+
 
     // Contract Reminder
     Route::get('/contracts/{id}/reminder', [ContractController::class, 'sendReminder'])->name('contracts.reminder');
@@ -123,6 +128,17 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+// Google OAuth Routes
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+// Form untuk minta reset password
+Route::get('password/forgot', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+// Form untuk reset password via token
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 /*
 |--------------------------------------------------------------------------
