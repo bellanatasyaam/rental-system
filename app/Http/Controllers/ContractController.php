@@ -54,7 +54,7 @@ class ContractController extends Controller
         return view('contracts.index', compact('contracts'));
     }
 
-        // Print semua contract
+    // Print semua contract
     public function print()
     {
         // Ambil semua kontrak lengkap dengan relasinya
