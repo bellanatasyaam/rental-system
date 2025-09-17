@@ -12,7 +12,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('property_id');
             $table->string('unit_code');
             $table->string('name');
-            $table->string('type')->default('standard')->change();
             $table->decimal('area', 10, 2)->nullable()->change();
             $table->decimal('monthly_price', 15, 2)->nullable()->change();
             $table->decimal('deposit_amount', 15, 2)->nullable()->change();

@@ -35,8 +35,8 @@
         @endif
 
         {{-- Table Wrapper --}}
-        <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-300">
-            <table id="datatable" class="min-w-full table-auto border-collapse bg-gray-100 text-gray-900 text-sm mx-auto rounded-lg">
+        <div class="overflow-x-auto rounded-lg shadow-lg border border-white-300">
+            <table id="datatable" class="min-w-full table-auto border-collapse bg-white-100 text-gray-900 text-sm mx-auto rounded-lg">
                 <thead class="bg-gray-300 text-gray-900 uppercase text-sm">
                     <tr>
                         <th class="px-4 py-3">ID</th>

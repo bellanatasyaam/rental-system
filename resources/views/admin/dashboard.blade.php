@@ -206,4 +206,66 @@
             </div>
         </div>
     </div>
+
+     <!-- {{-- 🔹 Tambahin script Firebase di bawah ini --}} -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJOANDFcHCxQbdRE80toyI1RjxpHMZ87Q",
+            authDomain: "rental-system-833a9.firebaseapp.com",
+            projectId: "rental-system-833a9",
+            storageBucket: "rental-system-833a9.firebasestorage.app",
+            messagingSenderId: "121485908783",
+            appId: "1:121485908783:web:ce0be2285988d021df1fda",
+            measurementId: "G-HNJKB85YH8"
+        };
+
+        // ✅ Init Firebase
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging(app);
+
+        // ✅ Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                .then((registration) => {
+                    console.log('✅ Service Worker terdaftar:', registration);
+
+                    // 🔹 Tunggu SW benar-benar aktif
+                    navigator.serviceWorker.ready.then((reg) => {
+                        getToken(messaging, {
+                            vapidKey: "BG7UKoAwXVJ1siLRqR0aTGPs_oBtnxoYtSrQml82AF1ytluccrT2xQLNJmDgVHh8IRtfS-jQ5GDnyFtemEq6BKY",
+                            serviceWorkerRegistration: reg
+                        })
+                        .then((currentToken) => {
+                            if (currentToken) {
+                                console.log("✅ Token device:", currentToken);
+                                axios.post(`/tenants/${tenantId}/device-token`, {
+                                    device_token: currentToken
+                                })
+                                .then(res => console.log('✅ Token tenant tersimpan di DB'))
+                                .catch(err => console.error('❌ Gagal simpan token', err));
+                            } else {
+                                console.log("⚠️ Token tidak tersedia, minta izin notif lagi");
+                            }
+                        })
+                        .catch((err) => {
+                            console.error("❌ Gagal ambil token:", err);
+                        });
+                    });
+                })
+                .catch((err) => {
+                    console.error('❌ Service Worker gagal:', err);
+                });
+        }
+
+        // ✅ Listener pesan saat web sedang terbuka
+        onMessage(messaging, (payload) => {
+            console.log("📩 Pesan foreground diterima:", payload);
+            alert(`Notifikasi: ${payload.notification.title} - ${payload.notification.body}`);
+        });
+    </script>
+
+
 </x-app-layout>

@@ -75,24 +75,24 @@ class TenantController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:tenants,name',
-            'gender' => 'required|in:Male,Female',
+            'gender' => 'required|in:Laki-laki,Perempuan',
             'religion' => 'nullable|string|max:50',
             'occupation' => 'nullable|string|max:100',
             'marital_status' => 'nullable|string|max:50',
             'origin_address' => 'nullable|string',
-            'contact_name' => 'required|string|max:255',
+            'emergency_contact' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'emergency_contact' => 'nullable|string|max:255',
-            'rental_start_date' => 'nullable|date',
             'email' => 'required|email|max:255',
+            'rental_start_date' => 'nullable|date',
             'id_card_number' => 'required|string|max:50',
             'address' => 'required|string',
         ]);
 
-        Tenant::create($request->all());
+        Tenant::create($request->except('_token'));
 
         return redirect()->route('tenants.index')->with('success', 'Tenant created successfully.');
     }
+
 
     /**
      * Display the specified tenant.
@@ -164,6 +164,22 @@ class TenantController extends Controller
     {
         // bisa ganti view sesuai yang kamu mau
         return view('tenant.dashboard');
+    }
+
+    /**
+     * Update device_token untuk Firebase push notification.
+     */
+    public function updateDeviceToken(Request $request, Tenant $tenant)
+    {
+        $request->validate([
+            'device_token' => 'required|string',
+        ]);
+
+        $tenant->update([
+            'device_token' => $request->device_token,
+        ]);
+
+        return response()->json(['message' => 'Device token updated successfully']);
     }
     
     }

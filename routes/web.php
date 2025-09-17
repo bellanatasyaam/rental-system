@@ -4,6 +4,7 @@ use App\Models\User;
 use App\Models\Contract;
 use App\Notifications\ContractExpiringNotification;
 use Illuminate\Support\Facades\Route;
+use Kreait\Firebase\Factory;
 
 use App\Http\Controllers\Auth\{
     ForgotPasswordController,
@@ -29,6 +30,31 @@ use App\Http\Controllers\{
     AdminController,
     StaffController
 };
+
+// routes/web.php
+Route::post('/save-fcm-token', [App\Http\Controllers\NotificationController::class, 'saveToken']);
+
+Route::get('/test-fcm', function () {
+    $factory = (new Factory)->withServiceAccount(config('services.firebase.credentials'));
+    $messaging = $factory->createMessaging();
+
+    $deviceToken = 'ISI_FCM_DEVICE_TOKEN_DISINI'; // ganti token dari device user
+
+    $message = [
+        'token' => $deviceToken,
+        'notification' => [
+            'title' => 'Hello from Laravel 🚀',
+            'body' => 'Push notification berhasil dikirim!',
+        ],
+    ];
+
+    try {
+        $messaging->send($message);
+        return 'Notification sent!';
+    } catch (\Throwable $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+}); 
 
 // Login & Logout
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
@@ -59,7 +85,7 @@ Route::get('/', function () {
 
 // STAFF DAN ADMIN - akses tenant
 Route::middleware(['auth', 'role:admin,staff'])->group(function () {
-    Route::resource('tenants', TenantController::class)->only(['index', 'show', 'create', 'store', 'edit', 'destroy']);
+    Route::resource('tenants', TenantController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
 });
 
 
@@ -83,8 +109,10 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
 
 // TENANT - akses dashboard pribadi
 Route::middleware(['auth', 'role:tenant'])->group(function () {
+    Route::post('/tenants/{tenant}/device-token', [TenantController::class, 'updateDeviceToken']);
     Route::get('/tenant/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
 });
+
 
 /*
 |--------------------------------------------------------------------------

@@ -1,109 +1,128 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Edit Tenant')
 
 @section('content')
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 85vh;">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <div class="card shadow border-0 rounded-4">
-            <div class="card-header bg-primary text-white text-center rounded-top-4">
-                <h5 class="mb-0">Edit Data Tenant</h5>
+<div class="flex justify-center items-center w-full px-6 py-6">
+    <div class="w-11/12 md:w-10/12 lg:w-8/12">
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200">
+            
+            {{-- Header --}}
+            <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-500 rounded-t-xl">
+                <h1 class="text-xl font-bold text-black">Edit Tenant</h1>
             </div>
-            <div class="card-body px-4 py-4">
-                <form action="{{ route('tenants.update', $tenant->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
 
-                    {{-- Nama --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Nama</label>
-                        <input type="text" name="name" value="{{ $tenant->name }}" class="form-control" required>
-                    </div>
+            {{-- Form --}}
+            <form action="{{ route('tenants.update', $tenant->id) }}" method="POST" class="px-6 py-6 space-y-5">
+                @csrf
+                @method('PUT')
 
-                    {{-- Gender --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Gender</label>
-                        <select name="gender" class="form-select" required>
-                            <option value="">-- Pilih Gender --</option>
-                            <option value="Laki-laki" {{ $tenant->gender == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="Perempuan" {{ $tenant->gender == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                        </select>
-                    </div>
+                {{-- Nama --}}
+                <div>
+                    <label class="block font-semibold mb-1">Nama <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" value="{{ old('name', $tenant->name) }}" 
+                           class="w-full border-gray-300 rounded-lg shadow-sm @error('name') border-red-500 @enderror" required>
+                    @error('name') 
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p> 
+                    @enderror
+                </div>
 
-                    {{-- Agama --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Agama</label>
-                        <select name="religion" class="form-select">
-                            <option value="">-- Pilih Agama --</option>
-                            <option value="Islam" {{ $tenant->religion == 'Islam' ? 'selected' : '' }}>Islam</option>
-                            <option value="Kristen" {{ $tenant->religion == 'Kristen' ? 'selected' : '' }}>Kristen</option>
-                            <option value="Katolik" {{ $tenant->religion == 'Katolik' ? 'selected' : '' }}>Katolik</option>
-                            <option value="Hindu" {{ $tenant->religion == 'Hindu' ? 'selected' : '' }}>Hindu</option>
-                            <option value="Buddha" {{ $tenant->religion == 'Buddha' ? 'selected' : '' }}>Buddha</option>
-                            <option value="Konghucu" {{ $tenant->religion == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
-                        </select>
-                    </div>
+                {{-- Gender --}}
+                <div>
+                    <label class="block font-semibold mb-1">Gender</label>
+                    <select name="gender" class="w-full border-gray-300 rounded-lg shadow-sm">
+                        <option value="">-- Pilih Gender --</option>
+                        <option value="Laki-laki" {{ $tenant->gender == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="Perempuan" {{ $tenant->gender == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                </div>
 
-                    {{-- Pekerjaan --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Pekerjaan</label>
-                        <input type="text" name="occupation" value="{{ $tenant->occupation }}" class="form-control">
-                    </div>
+                {{-- Agama --}}
+                <div>
+                    <label class="block font-semibold mb-1">Agama</label>
+                    <select name="religion" class="w-full border-gray-300 rounded-lg shadow-sm">
+                        <option value="">-- Pilih Agama --</option>
+                        <option value="Islam" {{ $tenant->religion == 'Islam' ? 'selected' : '' }}>Islam</option>
+                        <option value="Kristen" {{ $tenant->religion == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                        <option value="Katolik" {{ $tenant->religion == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                        <option value="Hindu" {{ $tenant->religion == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                        <option value="Buddha" {{ $tenant->religion == 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                        <option value="Konghucu" {{ $tenant->religion == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                    </select>
+                </div>
 
-                    {{-- Status Perkawinan --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Status Perkawinan</label>
-                        <select name="marital_status" class="form-select">
-                            <option value="">-- Pilih Status --</option>
-                            <option value="Belum Kawin" {{ $tenant->marital_status == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
-                            <option value="Menikah" {{ $tenant->marital_status == 'Menikah' ? 'selected' : '' }}>Menikah</option>
-                            <option value="Cerai" {{ $tenant->marital_status == 'Cerai' ? 'selected' : '' }}>Cerai</option>
-                        </select>
-                    </div>
+                {{-- Pekerjaan --}}
+                <div>
+                    <label class="block font-semibold mb-1">Pekerjaan</label>
+                    <input type="text" name="occupation" value="{{ old('occupation', $tenant->occupation) }}"
+                           class="w-full border-gray-300 rounded-lg shadow-sm">
+                </div>
 
-                    {{-- Alamat --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Alamat Rumah Asal</label>
-                        <textarea name="origin_address" class="form-control" rows="3">{{ $tenant->origin_address }}</textarea>
-                    </div>
+                {{-- Status Perkawinan --}}
+                <div>
+                    <label class="block font-semibold mb-1">Status Perkawinan</label>
+                    <select name="marital_status" class="w-full border-gray-300 rounded-lg shadow-sm">
+                        <option value="">-- Pilih Status --</option>
+                        <option value="Belum Kawin" {{ $tenant->marital_status == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
+                        <option value="Menikah" {{ $tenant->marital_status == 'Menikah' ? 'selected' : '' }}>Menikah</option>
+                        <option value="Cerai" {{ $tenant->marital_status == 'Cerai' ? 'selected' : '' }}>Cerai</option>
+                    </select>
+                </div>
 
-                    {{-- No HP --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">No. Telp / HP</label>
-                        <input type="text" name="phone" value="{{ $tenant->phone }}" class="form-control">
-                    </div>
+                {{-- Alamat --}}
+                <div>
+                    <label class="block font-semibold mb-1">Alamat Rumah Asal</label>
+                    <textarea name="origin_address" rows="3"
+                              class="w-full border-gray-300 rounded-lg shadow-sm">{{ old('origin_address', $tenant->origin_address) }}</textarea>
+                </div>
 
-                    {{-- Kontak Darurat --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Kontak Darurat (Nama & Hubungan)</label>
-                        <input type="text" name="emergency_contact" value="{{ $tenant->emergency_contact }}" class="form-control">
-                    </div>
+                {{-- No HP --}}
+                <div>
+                    <label class="block font-semibold mb-1">No. Telp / HP</label>
+                    <input type="text" name="phone" value="{{ old('phone', $tenant->phone) }}"
+                           class="w-full border-gray-300 rounded-lg shadow-sm">
+                </div>
 
-                    {{-- Email --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Email</label>
-                        <input type="email" name="email" value="{{ $tenant->email }}" class="form-control">
-                    </div>
+                {{-- Kontak Darurat --}}
+                <div>
+                    <label class="block font-semibold mb-1">Kontak Darurat (Nama & Hubungan)</label>
+                    <input type="text" name="emergency_contact" value="{{ old('emergency_contact', $tenant->emergency_contact) }}"
+                           class="w-full border-gray-300 rounded-lg shadow-sm">
+                </div>
 
-                    {{-- Tanggal Mulai --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Tanggal Mulai Huni/Sewa</label>
-                        <input type="date" name="rental_start_date" value="{{ $tenant->rental_start_date }}" class="form-control">
-                    </div>
+                {{-- Email --}}
+                <div>
+                    <label class="block font-semibold mb-1">Email</label>
+                    <input type="email" name="email" value="{{ old('email', $tenant->email) }}"
+                           class="w-full border-gray-300 rounded-lg shadow-sm">
+                </div>
 
-                    {{-- KTP --}}
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold">No. KTP</label>
-                        <input type="text" name="id_card_number" value="{{ $tenant->id_card_number }}" class="form-control">
-                    </div>
+                {{-- Tanggal Mulai --}}
+                <div>
+                    <label class="block font-semibold mb-1">Tanggal Mulai Huni/Sewa</label>
+                    <input type="date" name="rental_start_date" value="{{ old('rental_start_date', $tenant->rental_start_date) }}"
+                           class="w-full border-gray-300 rounded-lg shadow-sm">
+                </div>
 
-                    {{-- Tombol --}}
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ route('tenants.index') }}" class="btn btn-secondary px-4">Kembali</a>
-                        <button type="submit" class="btn btn-success px-4">Update</button>
-                    </div>
-                </form>
-            </div>
+                {{-- KTP --}}
+                <div>
+                    <label class="block font-semibold mb-1">No. KTP</label>
+                    <input type="text" name="id_card_number" value="{{ old('id_card_number', $tenant->id_card_number) }}"
+                           class="w-full border-gray-300 rounded-lg shadow-sm">
+                </div>
+
+                {{-- Buttons --}}
+                <div class="flex justify-end space-x-3 pt-4">
+                    <a href="{{ route('tenants.index') }}" 
+                       class="bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-lg shadow">
+                       Cancel
+                    </a>
+                    <button type="submit" 
+                            class="bg-blue-600 hover:bg-blue-500 text-black px-4 py-2 rounded-lg shadow" style="margin-left: 20px;">
+                        Update Tenant
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

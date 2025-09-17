@@ -19,8 +19,6 @@
                 </a>
             </div>
         </div>
-        <br>
-        
 
         {{-- Alert sukses --}}
         @if(session('success'))

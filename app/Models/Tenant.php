@@ -10,7 +10,7 @@ class Tenant extends Model
     protected $fillable = [
         'name','gender','religion','occupation','marital_status',
         'origin_address','contact_name','phone','emergency_contact',
-        'rental_start_date','email','id_card_number','address'
+        'rental_start_date','email','id_card_number','address', 'device_token'
     ];
 
     public function contracts()

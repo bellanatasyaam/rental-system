@@ -17,7 +17,11 @@ class RolePermissionSeeder extends Seeder
             'manage tenants',
             'manage contracts',
             'manage payments',
-            'view reports'
+            'view reports',
+
+            // Tambah khusus tamu
+            'view property_unit',
+            'view contract',
         ];
 
         foreach ($permissions as $permission) {
@@ -28,6 +32,7 @@ class RolePermissionSeeder extends Seeder
         $admin  = Role::firstOrCreate(['name' => 'Admin']);
         $staff  = Role::firstOrCreate(['name' => 'Staff']);
         $tenant = Role::firstOrCreate(['name' => 'Tenant']);
+        $tamu   = Role::firstOrCreate(['name' => 'Tamu']); // baru
 
         // Assign permission ke role
         $admin->givePermissionTo(Permission::all());
@@ -38,5 +43,11 @@ class RolePermissionSeeder extends Seeder
             'view reports'
         ]);
         $tenant->givePermissionTo([]);
+
+        // Tamu cuma bisa view
+        $tamu->givePermissionTo([
+            'view property_unit',
+            'view contract'
+        ]);
     }
 }

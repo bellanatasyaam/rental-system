@@ -72,7 +72,12 @@
 
         <div class="mb-3">
             <label for="emergency_contact" class="form-label">Kontak Darurat (Nama & Hubungan)</label>
-            <input type="text" name="emergency_contact" id="emergency_contact" class="form-control" value="{{ old('emergency_contact') }}">
+            <input type="text" name="emergency_contact" id="emergency_contact" class="form-control" value="{{ old('emergency_contact') }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}">
         </div>
 
         <div class="mb-3">

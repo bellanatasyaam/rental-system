@@ -3,17 +3,39 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        // Jika kolom gender berupa enum, ubah menjadi string agar bisa menampung nilai bebas
+        // Tambahkan kolom sementara untuk backup data gender
         Schema::table('tenants', function (Blueprint $table) {
-            // Mengubah kolom gender menjadi string
-            $table->string('gender')->nullable()->change();
+            $table->string('gender_temp')->nullable()->after('name');
         });
 
+        // Salin data gender ke kolom sementara
+        DB::statement('UPDATE tenants SET gender_temp = gender');
+
+        // Hapus kolom enum gender
+        Schema::table('tenants', function (Blueprint $table) {
+            $table->dropColumn('gender');
+        });
+
+        // Tambahkan kolom gender baru dengan tipe string
+        Schema::table('tenants', function (Blueprint $table) {
+            $table->string('gender')->nullable()->after('name');
+        });
+
+        // Salin kembali data dari gender_temp ke gender
+        DB::statement('UPDATE tenants SET gender = gender_temp');
+
+        // Hapus kolom sementara gender_temp
+        Schema::table('tenants', function (Blueprint $table) {
+            $table->dropColumn('gender_temp');
+        });
+
+        // Tambahkan kolom lain jika belum ada
         Schema::table('tenants', function (Blueprint $table) {
             if (!Schema::hasColumn('tenants', 'religion')) {
                 $table->string('religion')->nullable()->after('gender');
@@ -51,10 +73,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tenants', function (Blueprint $table) {
-            // Jika ingin rollback, sesuaikan tipe kolom gender ke enum atau string sesuai keadaan sebelumnya
-            // Contoh rollback col gender ke enum, sesuaikan nilai enum jika perlu
-            $table->enum('gender', ['male', 'female'])->nullable()->change();
-
             $table->dropColumn([
                 'religion',
                 'occupation',
@@ -65,8 +83,10 @@ return new class extends Migration
                 'email',
                 'rental_start_date',
                 'id_card_number',
-                'address',
+                'address'
             ]);
         });
+
+        // rollback untuk gender belum disediakan, bisa dikembangkan jika diperlukan
     }
 };
