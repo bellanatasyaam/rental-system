@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('property_unit_id');
             $table->unsignedBigInteger('facility_id');
-            $table->json_decode('settings')->nullable();
+            $table->json('facilities');
             $table->string('status')->default('active');
             $table->timestamps();
         });

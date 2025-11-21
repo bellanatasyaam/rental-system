@@ -9,10 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('facilities', function (Blueprint $table) {
-            // tambahkan kolom baru
-            $table->string('room')->nullable()->after('type');
-            $table->string('floor')->nullable()->after('room');
-            $table->enum('ac', ['AC', 'No AC'])->default('No AC')->after('floor');
+            if (!Schema::hasColumn('facilities', 'room')) {
+                $table->string('room')->nullable()->after('type');
+            }
+            if (!Schema::hasColumn('facilities', 'floor')) {
+                $table->string('floor')->nullable()->after('room');
+            }
+            if (!Schema::hasColumn('facilities', 'ac')) {
+                $table->enum('ac', ['AC', 'No AC'])->default('No AC')->after('floor');
+            }
         });
     }
 
