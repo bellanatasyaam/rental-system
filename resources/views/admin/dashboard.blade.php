@@ -3,7 +3,7 @@
 
     <div class="w-full bg-white py-4 shadow-sm border-b">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
-            <h1 class="text-xl font-bold text-gray-700">CRM</h1>
+            <h1 class="text-xl font-bold text-gray-700">RENTAL SYSTEM</h1>
             <div class="flex items-center gap-3">
                 <span class="text-sm text-gray-700">
                     {{ Auth::user()->role }} ({{ Auth::user()->email }})
@@ -41,9 +41,32 @@
             @endphp
 
             @foreach ($cards as $card)
-            <a href="{{ route($card['route']) }}"
-               class="bg-white border rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col">
+            <div 
+                x-data="{ open: false }"
+                class="relative bg-white border rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col"
+            >
+                {{-- Tombol Info --}}
+                <button 
+                    @click.stop="open = !open"
+                    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl leading-none"
+                >
+                    ℹ️
+                </button>
 
+                {{-- Popover Info --}}
+                <div 
+                    x-show="open"
+                    @click.outside="open = false"
+                    x-transition
+                    class="absolute top-10 right-3 w-64 bg-white border rounded-lg shadow p-3 text-xs text-gray-700 z-20"
+                >
+                    <strong class="text-gray-900">{{ $card['title'] }}</strong>
+                    <p class="mt-1 text-gray-600">
+                        {{ $card['desc'] }}
+                    </p>
+                </div>
+
+                {{-- Card Content --}}
                 <h3 class="text-lg font-semibold text-gray-800 mb-3">
                     {{ $card['title'] }}
                 </h3>
@@ -52,17 +75,184 @@
                     {{ $card['desc'] }}
                 </p>
 
-                <button class="mt-auto px-3 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700">
+                <a href="{{ route($card['route']) }}"
+                   class="mt-auto px-3 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700 text-center">
                     Go to {{ $card['title'] }}
-                </button>
-            </a>
+                </a>
+            </div>
             @endforeach
 
         </div>
     </div>
 
+    <div class="mt-10 bg-white border rounded-xl p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Penjelasan Menu di Dashboard</h2>
 
-    {{-- FIREBASE SCRIPT LU GUA BIARIN UTUH KAYAK SEMULA --}}
+        <div class="space-y-8 text-gray-700 text-sm leading-relaxed">
+
+            {{-- ========== FULL EXPLANATIONS ========== --}}
+            {{-- (Tidak aku ubah sama sekali) --}}
+
+            <!-- COMPANIES -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">1. Companies</h3>
+                <p class="mt-1">
+                    Menu ini berisi informasi perusahaan pemilik atau pengelola properti.
+                    Meski tidak terlihat di ERD, biasanya digunakan untuk mencatat:
+                </p>
+                <ul class="list-disc ml-6 mt-1">
+                    <li>Nama perusahaan</li>
+                    <li>Alamat perusahaan</li>
+                    <li>Kontak perusahaan</li>
+                    <li>Data pendukung lainnya</li>
+                </ul>
+                <p class="mt-1">
+                    Dipakai untuk sistem yang mengelola banyak properti milik beberapa perusahaan berbeda.
+                </p>
+            </div>
+
+            <!-- FACILITIES -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">2. Facilities</h3>
+                <p class="mt-1">Mengacu pada tabel <strong>FACILITIES</strong>.</p>
+                <p class="mt-1">Menu ini berisi master data fasilitas, seperti:</p>
+                <ul class="list-disc ml-6 mt-1">
+                    <li>Nama fasilitas (wifi, listrik, air, parkir, gym, dll)</li>
+                    <li>Tipe fasilitas (metered, non-metered, fixed charge)</li>
+                    <li>Deskripsi fasilitas</li>
+                    <li>Tarif atau cost</li>
+                    <li>Billing type (per penggunaan, flat rate)</li>
+                </ul>
+                <p class="mt-1">
+                    Menu ini hanya mendefinisikan jenis fasilitas secara umum, 
+                    dan belum terhubung ke properti atau unit tertentu.
+                </p>
+            </div>
+
+            <!-- TENANTS -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">3. Tenants</h3>
+                <p class="mt-1">Mengacu pada tabel <strong>TENANTS</strong>.</p>
+                <p class="mt-1">Menu ini menyimpan data penyewa, termasuk:</p>
+                <ul class="list-disc ml-6 mt-1">
+                    <li>Nama tenant</li>
+                    <li>Contact person</li>
+                    <li>Nomor telepon</li>
+                    <li>Email</li>
+                    <li>ID card / KTP</li>
+                    <li>Alamat lengkap</li>
+                </ul>
+                <p class="mt-1">Data ini digunakan ketika membuat <strong>contract</strong>.</p>
+            </div>
+
+            <!-- PROPERTIES -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">4. Properties</h3>
+                <p class="mt-1">Mengacu pada tabel <strong>PROPERTIES</strong>.</p>
+                <p class="mt-1">Menu ini mencatat data master properti, seperti:</p>
+                <ul class="list-disc ml-6 mt-1">
+                    <li>Kode dan nama properti</li>
+                    <li>Alamat properti</li>
+                    <li>Tipe (residential, office, warehouse, dll)</li>
+                    <li>Total area</li>
+                    <li>Deskripsi</li>
+                    <li>Status aktif / nonaktif</li>
+                    <li>Foto properti (dalam bentuk JSON)</li>
+                </ul>
+                <p class="mt-1">Setiap properti dapat memiliki banyak <strong>property units</strong>.</p>
+            </div>
+
+            <!-- PROPERTY UNITS -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">5. Property Units</h3>
+                <p class="mt-1">Mengacu pada tabel <strong>PROPERTY_UNITS</strong>.</p>
+                <p class="mt-1">Menu ini menyimpan detail unit yang berada dalam suatu properti:</p>
+                <ul class="list-disc ml-6 mt-1">
+                    <li>Property ID (relasi ke PROPERTIES)</li>
+                    <li>Unit code / nomor unit</li>
+                    <li>Nama unit</li>
+                    <li>Tipe unit (studio, booth, warehouse space, dll)</li>
+                    <li>Area</li>
+                    <li>Monthly price</li>
+                    <li>Deposit amount</li>
+                    <li>Status (available, occupied, maintenance)</li>
+                    <li>Catatan unit</li>
+                </ul>
+                <p class="mt-1">Unit dipilih tenant saat membuat <strong>contract</strong>.</p>
+            </div>
+
+            <!-- CONTRACTS -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">6. Contracts</h3>
+                <p class="mt-1">Mengacu pada tabel <strong>CONTRACTS</strong>.</p>
+                <p class="mt-1">Menu ini menyimpan seluruh perjanjian sewa:</p>
+                <ul class="list-disc ml-6 mt-1">
+                    <li>Property ID</li>
+                    <li>Property Unit ID</li>
+                    <li>Tenant ID</li>
+                    <li>Contract number</li>
+                    <li>Start date & end date</li>
+                    <li>Monthly rent</li>
+                    <li>Deposit amount</li>
+                    <li>Payment due day</li>
+                    <li>Status contract (active, completed, terminated)</li>
+                </ul>
+                <p class="mt-1">
+                    Kontrak akan menghasilkan <strong>facility usage</strong> per periode.
+                </p>
+            </div>
+
+            <!-- PAYMENTS -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">7. Payments</h3>
+                <p class="mt-1">Walaupun tabel detail tidak terlihat, menu ini umumnya digunakan untuk:</p>
+                <ul class="list-disc ml-6 mt-1">
+                    <li>Mencatat pembayaran dari tenant</li>
+                    <li>Menghubungkan pembayaran ke kontrak</li>
+                    <li>Menampilkan riwayat pembayaran tenant</li>
+                </ul>
+                <p class="mt-1">
+                    Bisa juga menampilkan charge fasilitas yang sudah di-invoice.
+                </p>
+            </div>
+
+            <!-- PROPERTY UNIT FACILITIES -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">8. Property Unit Facilities</h3>
+                <p class="mt-1">Mengacu pada tabel <strong>PROPERTY_UNIT_FACILITIES</strong>.</p>
+                <p class="mt-1">Menu ini mengatur fasilitas apa saja yang ada di suatu unit:</p>
+                <ul class="list-disc ml-6 mt-1">
+                    <li>Relasi unit ke fasilitas</li>
+                    <li>Settings (JSON)</li>
+                    <li>Status (active / inactive)</li>
+                </ul>
+                <p class="mt-1">Contoh: Unit 101 memiliki listrik, air, wifi, dll.</p>
+            </div>
+
+            <!-- FACILITY USAGES -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">9. Facility Usages</h3>
+                <p class="mt-1">Mengacu pada tabel <strong>FACILITY_USAGES</strong>.</p>
+                <p class="mt-1">Menu ini mencatat pemakaian fasilitas per periode:</p>
+                <ul class="list-disc ml-6 mt-1">
+                    <li>Property Unit Facility ID</li>
+                    <li>Contract ID</li>
+                    <li>Periode pemakaian</li>
+                    <li>Usage value (misal 350 kWh)</li>
+                    <li>Rate</li>
+                    <li>Total cost</li>
+                    <li>Status invoiced atau belum</li>
+                </ul>
+                <p class="mt-1">
+                    Biasanya digenerate otomatis setiap periode (bulanan).
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+
+    {{-- FIREBASE SCRIPT (Tidak Diubah) --}}
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
