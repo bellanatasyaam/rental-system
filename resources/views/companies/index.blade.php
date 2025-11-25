@@ -1,102 +1,140 @@
 {{-- resources/views/companies/index.blade.php --}}
 <x-app-layout>
 
-    {{-- HEADER PUTIH SEPERTI DI DASHBOARD --}}
-    <div class="w-full bg-white py-4 shadow-sm border-b">
+    {{-- HEADER --}}
+    <div class="w-full bg-white py-5 shadow-sm border-b">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
-            <h1 class="text-xl font-bold text-gray-700">Companies</h1>
+            <div>
+                <h1 class="text-2xl font-semibold text-gray-800">Companies</h1>
+                <p class="text-sm text-gray-500">Kelola data perusahaan penyewa.</p>
+            </div>
 
             <div class="flex items-center gap-3">
                 <a href="{{ url('/admin/dashboard') }}"
-                   class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300">
+                    class="px-3 py-1.5 border border-gray-300 text-gray-600 rounded-md text-sm hover:bg-gray-100">
                     ← Back
                 </a>
 
                 <a href="{{ route('companies.create') }}"
-                   class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 shadow-sm">
                     + Add Company
                 </a>
             </div>
         </div>
     </div>
 
+    {{-- MAIN CONTENT --}}
     <div class="max-w-7xl mx-auto px-6 mt-8">
 
-        {{-- ALERT SUCCESS --}}
+        {{-- SUCCESS ALERT --}}
         @if(session('success'))
-        <div class="bg-green-500 text-white p-3 rounded-lg shadow mb-4">
+        <div class="bg-green-500 text-white p-3 rounded-md shadow mb-4">
             {{ session('success') }}
         </div>
         @endif
 
         {{-- CARD WRAPPER --}}
-        <div class="bg-white border rounded-xl shadow overflow-x-auto">
+        <div class="bg-white border rounded-lg shadow-sm p-5">
 
-            <table class="w-full table-auto">
-                <thead class="bg-blue-600 text-white text-sm uppercase">
-                    <tr>
-                        <th class="px-4 py-3">ID</th>
-                        <th class="px-4 py-3">Nama</th>
-                        <th class="px-4 py-3">Alamat</th>
-                        <th class="px-4 py-3">Phone</th>
-                        <th class="px-4 py-3">Email</th>
-                        <th class="px-4 py-3 text-center">Action</th>
-                    </tr>
-                </thead>
+            {{-- TOP TOOLBAR --}}
+            <div class="flex items-center justify-between mb-4">
+                <div class="text-sm bg-blue-100 text-blue-600 px-3 py-1 rounded-md">
+                    Total: <strong>{{ $companies->total() }}</strong>
+                </div>
 
-                <tbody class="text-gray-900 text-sm">
-                    @forelse($companies as $company)
-                    <tr class="border-t hover:bg-gray-100 transition">
-                        <td class="px-4 py-3">{{ $company->id }}</td>
-                        <td class="px-4 py-3 font-semibold">{{ $company->name }}</td>
-                        <td class="px-4 py-3">{{ Str::limit($company->address, 50) }}</td>
-                        <td class="px-4 py-3">{{ $company->phone }}</td>
-                        <td class="px-4 py-3">{{ $company->email }}</td>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center border rounded-md px-3 py-2 bg-white w-64">
+                        <input type="text" placeholder="Search..." class="w-full border-none focus:ring-0 text-sm">
+                    </div>
 
-                        <td class="px-4 py-3 text-center">
-                            <a href="{{ route('companies.edit', $company) }}"
-                               class="bg-yellow-400 hover:bg-yellow-300 text-black px-3 py-1 rounded-md text-sm shadow">
-                                Edit
-                            </a>
+                    <button class="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-100">
+                        Export CSV
+                    </button>
+                </div>
+            </div>
 
-                            <button data-id="{{ $company->id }}"
-                                    class="btn-delete bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-md text-sm shadow ml-2">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="px-4 py-3 text-center text-gray-600">
-                            No companies found.
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            {{-- TABLE --}}
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse text-sm">
+                    <thead>
+                        <tr class="border-b bg-gray-50 text-gray-600 text-xs uppercase">
+                            <th class="py-3 px-4 text-left">ID</th>
+                            <th class="py-3 px-4 text-left">Nama</th>
+                            <th class="py-3 px-4 text-left hidden md:table-cell">Alamat</th>
+                            <th class="py-3 px-4 text-left hidden md:table-cell">Phone</th>
+                            <th class="py-3 px-4 text-left hidden md:table-cell">Email</th>
+                            <th class="py-3 px-4 text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="text-gray-800">
+                        @forelse($companies as $company)
+                        <tr class="border-b hover:bg-gray-50 transition">
+                            <td class="py-3 px-4">
+                                <div class="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center font-semibold">
+                                    {{ $company->id }}
+                                </div>
+                            </td>
+
+                            <td class="py-3 px-4">
+                                <div class="font-semibold">{{ $company->name }}</div>
+                                <div class="text-xs text-gray-500">{{ Str::limit($company->address, 20) }}</div>
+                            </td>
+
+                            <td class="py-3 px-4 hidden md:table-cell">{{ $company->address }}</td>
+                            <td class="py-3 px-4 hidden md:table-cell">{{ $company->phone }}</td>
+                            <td class="py-3 px-4 hidden md:table-cell">{{ $company->email }}</td>
+
+                            <td class="py-3 px-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+
+                                    {{-- EDIT --}}
+                                    <a href="{{ route('companies.edit', $company) }}"
+                                        class="px-2 py-1 border rounded-md hover:bg-gray-100 text-gray-700">
+                                        ✏️
+                                    </a>
+
+                                    {{-- DELETE --}}
+                                    <button data-id="{{ $company->id }}"
+                                        class="btn-delete px-2 py-1 border rounded-md hover:bg-gray-100 text-red-600">
+                                        🗑️
+                                    </button>
+
+                                    {{-- VIEW --}}
+                                    <a href="{{ route('companies.show', $company) }}"
+                                        class="px-2 py-1 border rounded-md hover:bg-gray-100 text-gray-700">
+                                        🔍
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-gray-500">No companies found.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- PAGINATION --}}
+            <div class="mt-5">
+                {{ $companies->links() }}
+            </div>
+
         </div>
-
-        {{-- PAGINATION --}}
-        <div class="mt-4 flex justify-center">
-            {{ $companies->links() }}
-        </div>
-
     </div>
 
-    {{-- SCRIPT DELETE --}}
+    {{-- DELETE SCRIPT --}}
     <script>
         document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', () => {
-                if (confirm('Yakin ingin menghapus company ini?')) {
+                if(confirm('Yakin ingin menghapus company ini?')) {
                     let id = btn.getAttribute('data-id');
-
                     fetch(`/companies/${id}`, {
                         method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    })
-                    .then(res => location.reload());
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                    }).then(res => location.reload());
                 }
             });
         });
