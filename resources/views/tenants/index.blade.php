@@ -1,149 +1,186 @@
 {{-- resources/views/tenants/index.blade.php --}}
 <x-app-layout>
 
-    {{-- TOP HEADER --}}
-    <div class="w-full bg-white py-4 shadow-sm border-b">
+    {{-- HEADER --}}
+    <div class="w-full bg-white py-5 shadow-sm border-b">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
-            <h1 class="text-xl font-bold text-gray-700">Tenants</h1>
+            <div>
+                <h1 class="text-2xl font-semibold text-gray-800">Tenants</h1>
+                <p class="text-sm text-gray-500">Kelola data penghuni / penyewa.</p>
+            </div>
 
             <div class="flex items-center gap-3">
+
+                {{-- BACK --}}
                 <a href="{{ url('/admin/dashboard') }}"
-                   class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300">
+                    class="px-3 py-1.5 border border-gray-300 text-gray-600 rounded-md text-sm hover:bg-gray-100">
                     ← Back
                 </a>
 
-                <a href="{{ route('tenants.print') }}" 
-                   target="_blank"
-                   class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">
+                {{-- PRINT ALL --}}
+                <a href="{{ route('tenants.print') }}"
+                    target="_blank"
+                    class="px-3 py-1.5 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 shadow-sm">
                     🖨 Print All
                 </a>
 
+                {{-- ADD --}}
                 <a href="{{ route('tenants.create') }}"
-                   class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 shadow-sm">
                     + Add Tenant
                 </a>
             </div>
         </div>
     </div>
 
+    {{-- MAIN CONTENT --}}
+    <div class="w-full px-6 mt-8">
 
-    <div class="max-w-7xl mx-auto px-6 mt-8">
-
-        {{-- ALERT --}}
+        {{-- SUCCESS ALERT --}}
         @if(session('success'))
-        <div class="bg-green-500 text-white p-3 rounded-lg shadow mb-4">
+        <div class="bg-green-500 text-white p-3 rounded-md shadow mb-4">
             {{ session('success') }}
         </div>
         @endif
 
+        {{-- CARD WRAPPER --}}
+        <div class="bg-white border rounded-lg shadow-sm px-8 py-6">
 
-        {{-- TABLE WRAPPER --}}
-        <div class="bg-white border rounded-xl shadow overflow-x-auto">
+            {{-- TOP TOOLBAR --}}
+            <div class="flex items-center justify-between mb-4">
 
-            <table class="w-full table-auto">
-                <thead class="bg-blue-600 text-white text-sm uppercase">
-                    <tr>
-                        <th class="px-4 py-3">ID</th>
-                        <th class="px-4 py-3">Nama</th>
-                        <th class="px-4 py-3">Gender</th>
-                        <th class="px-4 py-3">Agama</th>
-                        <th class="px-4 py-3">Pekerjaan</th>
-                        <th class="px-4 py-3">Status</th>
-                        <th class="px-4 py-3">Alamat</th>
-                        <th class="px-4 py-3">No. HP</th>
-                        <th class="px-4 py-3">Kontak Darurat</th>
-                        <th class="px-4 py-3">Email</th>
-                        <th class="px-4 py-3">Tanggal</th>
-                        <th class="px-4 py-3">No. KTP</th>
-                        <th class="px-4 py-3 text-center">Action</th>
-                    </tr>
-                </thead>
+                {{-- TOTAL --}}
+                <div class="text-sm bg-blue-100 text-blue-600 px-3 py-1 rounded-md">
+                    Total: <strong>{{ $tenants->total() }}</strong>
+                </div>
 
-                <tbody class="text-gray-900 text-sm">
+                {{-- SEARCH + EXPORT --}}
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center border rounded-md px-3 py-2 bg-white w-64">
+                        <input type="text" placeholder="Search..." class="w-full border-none focus:ring-0 text-sm">
+                    </div>
 
-                    @forelse($tenants as $tenant)
-                    <tr class="border-t hover:bg-gray-100 transition">
-                        <td class="px-4 py-3 text-center">{{ $tenant->id }}</td>
-                        <td class="px-4 py-3 font-semibold">{{ $tenant->name }}</td>
-                        <td class="px-4 py-3 text-center">{{ $tenant->gender ?? '-' }}</td>
-                        <td class="px-4 py-3 text-center">{{ $tenant->religion ?? '-' }}</td>
-                        <td class="px-4 py-3">{{ $tenant->occupation ?? '-' }}</td>
-                        <td class="px-4 py-3 text-center">{{ $tenant->marital_status ?? '-' }}</td>
-                        <td class="px-4 py-3">{{ Str::limit($tenant->origin_address, 30) }}</td>
-                        <td class="px-4 py-3 text-center">{{ $tenant->phone ?? '-' }}</td>
-                        <td class="px-4 py-3">{{ Str::limit($tenant->emergency_contact, 25) }}</td>
-                        <td class="px-4 py-3">{{ $tenant->email ?? '-' }}</td>
+                    <button class="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-100">
+                        Export CSV
+                    </button>
+                </div>
+            </div>
 
-                        <td class="px-4 py-3 text-center">
-                            {{ $tenant->rental_start_date
-                                ? \Carbon\Carbon::parse($tenant->rental_start_date)->format('d M Y')
-                                : '-' }}
-                        </td>
+            {{-- TABLE --}}
+            <div class="overflow-x-visible">
+                <table class="w-full border-collapse text-sm">
+                    <thead>
+                        <tr class="border-b bg-gray-50 text-gray-600 text-xs uppercase">
+                            <th class="py-3 px-4 text-left">ID</th>
+                            <th class="py-3 px-4 text-left">Nama</th>
+                            <th class="py-3 px-4 text-left">Gender</th>
+                            <th class="py-3 px-4 text-left">Agama</th>
+                            <th class="py-3 px-4 text-left hidden md:table-cell">Pekerjaan</th>
+                            <th class="py-3 px-4 text-left">Status</th>
+                            <th class="py-3 px-4 text-left hidden md:table-cell">Alamat</th>
+                            <th class="py-3 px-4 text-left">No. HP</th>
+                            <th class="py-3 px-4 text-left hidden md:table-cell">Kontak Darurat</th>
+                            <th class="py-3 px-4 text-left hidden md:table-cell">Email</th>
+                            <th class="py-3 px-4 text-left">Tanggal</th>
+                            <th class="py-3 px-4 text-left hidden md:table-cell">No. KTP</th>
+                            <th class="py-3 px-4 text-center">Action</th>
+                        </tr>
+                    </thead>
 
-                        <td class="px-4 py-3 text-center">{{ $tenant->id_card_number ?? '-' }}</td>
+                    <tbody class="text-gray-800">
 
+                        @forelse($tenants as $tenant)
+                        <tr class="border-b hover:bg-gray-50 transition">
 
-                        {{-- ACTION --}}
-                        <td class="px-4 py-3 text-center">
-                            <div class="flex justify-center gap-2">
+                            {{-- ID --}}
+                            <td class="py-3 px-4">
+                                <div class="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center font-semibold">
+                                    {{ $tenant->id }}
+                                </div>
+                            </td>
 
-                                {{-- Print --}}
-                                <a href="{{ route('tenants.print.one', $tenant->id) }}"
-                                   target="_blank"
-                                   class="bg-green-500 hover:bg-green-400 text-white p-2 rounded-full shadow"
-                                   title="Print">
-                                    🖨
-                                </a>
+                            {{-- NAME --}}
+                            <td class="py-3 px-4 font-semibold">
+                                {{ $tenant->name }}
+                            </td>
 
-                                {{-- Detail --}}
-                                <a href="{{ route('tenants.show', $tenant->id) }}"
-                                   class="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded-full shadow"
-                                   title="Detail">
-                                    👁
-                                </a>
+                            <td class="py-3 px-4">{{ $tenant->gender ?? '-' }}</td>
+                            <td class="py-3 px-4">{{ $tenant->religion ?? '-' }}</td>
+                            <td class="py-3 px-4 hidden md:table-cell">{{ $tenant->occupation ?? '-' }}</td>
+                            <td class="py-3 px-4">{{ $tenant->marital_status ?? '-' }}</td>
+                            <td class="py-3 px-4 hidden md:table-cell">{{ Str::limit($tenant->address, 30) }}</td>
+                            <td class="py-3 px-4">{{ $tenant->phone ?? '-' }}</td>
+                            <td class="py-3 px-4 hidden md:table-cell">{{ Str::limit($tenant->emergency_contact, 30) }}</td>
+                            <td class="py-3 px-4 hidden md:table-cell">{{ $tenant->email ?? '-' }}</td>
 
-                                {{-- Edit --}}
-                                <a href="{{ route('tenants.edit', $tenant->id) }}"
-                                   class="bg-yellow-400 hover:bg-yellow-300 text-black p-2 rounded-full shadow"
-                                   title="Edit">
-                                    ✏
-                                </a>
+                            {{-- RENTAL DATE --}}
+                            <td class="py-3 px-4">
+                                {{ $tenant->rental_start_date
+                                    ? \Carbon\Carbon::parse($tenant->rental_start_date)->format('d M Y')
+                                    : '-' }}
+                            </td>
 
-                                {{-- Delete --}}
-                                <form action="{{ route('tenants.destroy', $tenant->id) }}"
-                                      method="POST"
-                                      onsubmit="return confirm('Yakin ingin hapus tenant ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="bg-red-500 hover:bg-red-400 text-white p-2 rounded-full shadow"
-                                            title="Delete">
-                                        🗑
-                                    </button>
-                                </form>
+                            {{-- KTP --}}
+                            <td class="py-3 px-4 hidden md:table-cell">
+                                {{ $tenant->id_card_number ?? '-' }}
+                            </td>
 
-                            </div>
-                        </td>
-                    </tr>
+                            {{-- ACTION --}}
+                            <td class="py-3 px-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
 
-                    @empty
-                    <tr>
-                        <td colspan="13" class="px-4 py-3 text-center text-gray-600">
-                            Tidak ada tenant.
-                        </td>
-                    </tr>
-                    @endforelse
+                                    {{-- PRINT --}}
+                                    <a href="{{ route('tenants.print.one', $tenant->id) }}" target="_blank"
+                                        class="px-2 py-1 border rounded-md hover:bg-gray-100 text-green-600">
+                                        🖨
+                                    </a>
 
-                </tbody>
-            </table>
+                                    {{-- DETAIL --}}
+                                    <a href="{{ route('tenants.show', $tenant->id) }}"
+                                        class="px-2 py-1 border rounded-md hover:bg-gray-100 text-gray-700">
+                                        👁
+                                    </a>
+
+                                    {{-- EDIT --}}
+                                    <a href="{{ route('tenants.edit', $tenant->id) }}"
+                                        class="px-2 py-1 border rounded-md hover:bg-gray-100 text-yellow-600">
+                                        ✏️
+                                    </a>
+
+                                    {{-- DELETE --}}
+                                    <form action="{{ route('tenants.destroy', $tenant->id) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Hapus tenant ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="px-2 py-1 border rounded-md hover:bg-gray-100 text-red-600">
+                                            🗑
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+
+                        @empty
+                        <tr>
+                            <td colspan="13" class="text-center py-5 text-gray-500">
+                                Tidak ada tenant.
+                            </td>
+                        </tr>
+                        @endforelse
+
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- PAGINATION --}}
+            <div class="mt-5">
+                {{ $tenants->links() }}
+            </div>
 
         </div>
-
-        {{-- Pagination --}}
-        <div class="mt-4 flex justify-center">
-            {{ $tenants->links() }}
-        </div>
-
     </div>
 
 </x-app-layout>

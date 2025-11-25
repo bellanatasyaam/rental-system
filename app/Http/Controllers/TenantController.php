@@ -118,10 +118,10 @@ class TenantController extends Controller
     public function update(Request $request, string $id)
     {
         $tenant = Tenant::findOrFail($id);
-        
+
         $request->validate([
             'name' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255',
                 Rule::unique('tenants', 'name')->ignore($tenant->id),
@@ -131,22 +131,27 @@ class TenantController extends Controller
             'occupation' => 'nullable|string|max:100',
             'marital_status' => 'nullable|string|max:50',
             'origin_address' => 'nullable|string',
-            'contact_name' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'emergency_contact' => 'nullable|string|max:255',
-            // 'rental_start_date' => 'nullable|date',
+
+            // INI WAJIB ADA! kalau tidak, DB error → redirect balik → terlihat "reload"
+            'address' => 'required|string',
+
+            // ini juga kamu required di store, tapi nullable di update → ERROR
+            'emergency_contact' => 'required|string|max:255',
+
+            'phone' => 'required|string|max:20',
             'email' => [
-            'nullable',
-            'email',
-            'max:255',
-            Rule::unique('tenants', 'email')->ignore($tenant->id), // <--- Tambah validasi email unik
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('tenants', 'email')->ignore($tenant->id),
             ],
-            'id_card_number' => 'nullable|string|max:50',
-            'address' => 'nullable|string',
+            'rental_start_date' => 'nullable|date',
+            'id_card_number' => 'required|string|max:50',
         ]);
-    $tenant = Tenant::findOrFail($id);
-    $tenant->update($request->all());
-    return redirect()->route('tenants.index')->with('success', 'Tenant updated!');
+
+        $tenant->update($request->all());
+
+        return redirect()->route('tenants.index')->with('success', 'Tenant updated!');
     }
 
     /**
