@@ -1,102 +1,148 @@
 {{-- resources/views/facilities/index.blade.php --}}
 <x-app-layout>
 
-    {{-- Header putih --}}
-    <div class="w-full bg-white py-4 shadow-sm border-b">
+    {{-- HEADER --}}
+    <div class="w-full bg-white py-5 shadow-sm border-b">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
-            <h1 class="text-xl font-bold text-gray-700">Facilities</h1>
+            <div>
+                <h1 class="text-2xl font-semibold text-gray-800">Facilities</h1>
+                <p class="text-sm text-gray-500">Kelola fasilitas gedung.</p>
+            </div>
 
             <div class="flex items-center gap-3">
                 <a href="{{ url('/admin/dashboard') }}"
-                   class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300">
+                    class="px-3 py-1.5 border border-gray-300 text-gray-600 rounded-md text-sm hover:bg-gray-100">
                     ← Back
                 </a>
 
                 <a href="{{ route('facilities.create') }}"
-                   class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 shadow-sm">
                     + Add Facility
                 </a>
             </div>
         </div>
     </div>
 
-
+    {{-- MAIN --}}
     <div class="max-w-7xl mx-auto px-6 mt-8">
 
-        {{-- Alert sukses --}}
+        {{-- SUCCESS ALERT --}}
         @if(session('success'))
-        <div class="bg-green-500 text-white p-3 rounded-lg shadow mb-4">
+        <div class="bg-green-500 text-white p-3 rounded-md shadow mb-4">
             {{ session('success') }}
         </div>
         @endif
 
-        {{-- Table Wrapper Card --}}
-        <div class="bg-white border rounded-xl shadow overflow-x-auto">
+        {{-- CARD --}}
+        <div class="bg-white border rounded-lg shadow-sm p-5">
 
-            <table class="w-full table-auto">
-                <thead class="bg-blue-600 text-white text-sm uppercase">
-                    <tr>
-                        <th class="px-4 py-3 text-left">ID</th>
-                        <th class="px-4 py-3 text-left">Name</th>
-                        <th class="px-4 py-3 text-left">Room</th>
-                        <th class="px-4 py-3 text-left">Floor</th>
-                        <th class="px-4 py-3 text-left">AC</th>
-                        <th class="px-4 py-3 text-left">Type</th>
-                        <th class="px-4 py-3 text-left">Description</th>
-                        <th class="px-4 py-3 text-left">Cost</th>
-                        <th class="px-4 py-3 text-left">Billing Type</th>
-                        <th class="px-4 py-3 text-center">Action</th>
-                    </tr>
-                </thead>
+            {{-- TOP TOOLBAR --}}
+            <div class="flex items-center justify-between mb-4">
+                <div class="text-sm bg-blue-100 text-blue-600 px-3 py-1 rounded-md">
+                    Total: <strong>{{ $facilities->total() }}</strong>
+                </div>
 
-                <tbody class="text-gray-900 text-sm">
-                    @forelse($facilities as $facility)
-                    <tr class="border-t hover:bg-gray-100 transition">
-                        <td class="px-4 py-3">{{ $facility->id }}</td>
-                        <td class="px-4 py-3 font-semibold">{{ $facility->name }}</td>
-                        <td class="px-4 py-3">{{ $facility->room }}</td>
-                        <td class="px-4 py-3">{{ $facility->floor }}</td>
-                        <td class="px-4 py-3">{{ $facility->ac }}</td>
-                        <td class="px-4 py-3">{{ $facility->type }}</td>
-                        <td class="px-4 py-3">{{ Str::limit($facility->description, 50) }}</td>
-                        <td class="px-4 py-3">{{ number_format($facility->cost, 0, ',', '.') }}</td>
-                        <td class="px-4 py-3">{{ $facility->biling_type }}</td>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center border rounded-md px-3 py-2 bg-white w-64">
+                        <input type="text" placeholder="Search..." class="w-full border-none focus:ring-0 text-sm">
+                    </div>
 
-                        <td class="px-4 py-3 text-center">
-                            <a href="{{ route('facilities.edit', $facility) }}"
-                               class="bg-yellow-400 hover:bg-yellow-300 text-black px-3 py-1 rounded-md text-sm shadow">
-                                Edit
-                            </a>
+                    <button class="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-100">
+                        Export CSV
+                    </button>
+                </div>
+            </div>
 
-                            <form action="{{ route('facilities.destroy', $facility) }}"
-                                  method="POST" class="inline-block"
-                                  onsubmit="return confirm('Delete this facility?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-md text-sm shadow ml-2">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+            {{-- TABLE --}}
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse text-sm">
+                    <thead>
+                        <tr class="border-b bg-gray-50 text-gray-600 text-xs uppercase">
+                            <th class="py-3 px-4 text-left">ID</th>
+                            <th class="py-3 px-4 text-left">Name</th>
+                            <th class="py-3 px-4 text-left">Room</th>
+                            <th class="py-3 px-4 text-left">Floor</th>
+                            <th class="py-3 px-4 text-left">AC</th>
+                            <th class="py-3 px-4 text-left">Type</th>
+                            <th class="py-3 px-4 text-left hidden md:table-cell">Description</th>
+                            <th class="py-3 px-4 text-left">Cost</th>
+                            <th class="py-3 px-4 text-left">Billing Type</th>
+                            <th class="py-3 px-4 text-center">Action</th>
+                        </tr>
+                    </thead>
 
-                    @empty
-                    <tr>
-                        <td colspan="10" class="px-4 py-3 text-center text-gray-600">
-                            No facilities found.
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    <tbody class="text-gray-800">
+                        @forelse($facilities as $facility)
+                        <tr class="border-b hover:bg-gray-50 transition">
+
+                            <td class="py-3 px-4">
+                                <div class="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center font-semibold">
+                                    {{ $facility->id }}
+                                </div>
+                            </td>
+
+                            <td class="py-3 px-4 font-semibold">
+                                {{ $facility->name }}
+                            </td>
+
+                            <td class="py-3 px-4">{{ $facility->room }}</td>
+                            <td class="py-3 px-4">{{ $facility->floor }}</td>
+                            <td class="py-3 px-4">{{ $facility->ac }}</td>
+                            <td class="py-3 px-4">{{ $facility->type }}</td>
+
+                            <td class="py-3 px-4 hidden md:table-cell">
+                                {{ Str::limit($facility->description, 30) }}
+                            </td>
+
+                            <td class="py-3 px-4">
+                                Rp {{ number_format($facility->cost, 0, ',', '.') }}
+                            </td>
+
+                            <td class="py-3 px-4">{{ $facility->biling_type }}</td>
+
+                            <td class="py-3 px-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+
+                                    {{-- EDIT --}}
+                                    <a href="{{ route('facilities.edit', $facility) }}"
+                                        class="px-2 py-1 border rounded-md hover:bg-gray-100 text-gray-700">
+                                        ✏️
+                                    </a>
+
+                                    {{-- DELETE --}}
+                                    <form action="{{ route('facilities.destroy', $facility) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Delete this facility?')"
+                                          class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="px-2 py-1 border rounded-md hover:bg-gray-100 text-red-600">
+                                            🗑️
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+
+                        @empty
+                        <tr>
+                            <td colspan="10" class="text-center py-5 text-gray-500">
+                                No facilities found.
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- PAGINATION --}}
+            <div class="mt-5">
+                {{ $facilities->links() }}
+            </div>
+
         </div>
-
-        {{-- Pagination --}}
-        <div class="mt-4 flex justify-center">
-            {{ $facilities->links() }}
-        </div>
-
     </div>
 
 </x-app-layout>
