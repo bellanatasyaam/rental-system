@@ -1,109 +1,167 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Property Unit List')
+@section('title', 'Property Units')
 
 @section('content')
-<div class="flex justify-center items-center w-full px-6 py-6">
-    <div class="w-11/12 md:w-10/12 lg:w-9/12">
 
-        {{-- Header --}}
-        <div class="flex justify-between items-center mb-5">
-            <h3 class="text-2xl font-bold text-gray-900">Property Unit List</h3>
-            <div class="flex gap-3">
-                <a href="{{ url('/') }}"
-                   class="bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-lg shadow">
-                    Home
-                </a>
-                <a href="{{ route('property_units.manage') }}"
-                   class="bg-green-600 hover:bg-green-500 text-black px-4 py-2 rounded-lg shadow" style="margin-left: 20px;">
-                    Manage Kamar
-                </a>
-                <a href="{{ route('property_units.create') }}"
-                   class="bg-blue-600 hover:bg-blue-500 text-black px-4 py-2 rounded-lg shadow" style="margin-left: 20px;">
-                    + Add Property Unit
-                </a>
+{{-- HEADER --}}
+<div class="w-full bg-white py-5 shadow-sm border-b">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
+        <div>
+            <h1 class="text-2xl font-semibold text-gray-800">Property Units</h1>
+            <p class="text-sm text-gray-500">Kelola data unit kamar / properti.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            {{-- BACK --}}
+            <a href="{{ url('/admin/dashboard') }}"
+                class="px-3 py-1.5 border border-gray-300 text-gray-600 rounded-md text-sm hover:bg-gray-100">
+                ← Back
+            </a>
+
+            {{-- MANAGE KAMAR --}}
+            <a href="{{ route('property_units.manage') }}"
+                class="px-3 py-1.5 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 shadow-sm">
+                Manage Kamar
+            </a>
+
+            {{-- ADD --}}
+            <a href="{{ route('property_units.create') }}"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 shadow-sm">
+                + Add Unit
+            </a>
+        </div>
+    </div>
+</div>
+
+{{-- CONTENT --}}
+<div class="w-full px-6 mt-8">
+
+    {{-- SUCCESS ALERT --}}
+    @if(session('success'))
+        <div class="bg-green-500 text-white p-3 rounded-md shadow mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- CARD WRAPPER --}}
+    <div class="bg-white border rounded-lg shadow-sm px-8 py-6">
+
+        {{-- TOP TOOLBAR --}}
+        <div class="flex items-center justify-between mb-4">
+            {{-- TOTAL --}}
+            <div class="text-sm bg-blue-100 text-blue-600 px-3 py-1 rounded-md">
+                Total Unit: <strong>{{ $units->total() }}</strong>
+            </div>
+
+            {{-- SEARCH + EXPORT --}}
+            <div class="flex items-center gap-3">
+                <div class="flex items-center border rounded-md px-3 py-2 bg-white w-64">
+                    <input type="text" placeholder="Search..." class="w-full border-none focus:ring-0 text-sm">
+                </div>
+
+                <button class="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white hover:bg-gray-100">
+                    Export CSV
+                </button>
             </div>
         </div>
 
-        {{-- Alert sukses --}}
-        @if(session('success'))
-        <div class="bg-green-600 text-white p-3 rounded-lg shadow mb-4">
-            {{ session('success') }}
-        </div>
-        @endif
-
-        {{-- Table Wrapper --}}
-        <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-300">
-            <table id="datatable" class="min-w-full table-auto border-collapse bg-gray-100 text-gray-900 text-sm mx-auto rounded-lg">
-                <thead class="bg-gray-300 text-gray-900 uppercase text-sm">
-                    <tr>
-                        <th class="px-4 py-3">ID</th>
-                        <th class="px-4 py-3">Property</th>
-                        <th class="px-4 py-3">Unit Code</th>
-                        <th class="px-4 py-3">Name</th>
-                        <th class="px-4 py-3">Size (m²)</th>
-                        <th class="px-4 py-3">Monthly Price</th>
-                        <th class="px-4 py-3">Deposit Amount</th>
-                        <th class="px-4 py-3">Status</th>
-                        <th class="px-4 py-3">Notes</th>
-                        <th class="px-4 py-3 text-center w-36">Action</th>
+        {{-- TABLE --}}
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-sm">
+                <thead>
+                    <tr class="border-b bg-gray-50 text-gray-600 text-xs uppercase">
+                        <th class="py-3 px-4 text-left">ID</th>
+                        <th class="py-3 px-4 text-left">Property</th>
+                        <th class="py-3 px-4 text-left">Unit Code</th>
+                        <th class="py-3 px-4 text-left">Name</th>
+                        <th class="py-3 px-4 text-left">Size</th>
+                        <th class="py-3 px-4 text-left">Monthly Price</th>
+                        <th class="py-3 px-4 text-left">Deposit</th>
+                        <th class="py-3 px-4 text-left">Status</th>
+                        <th class="py-3 px-4 text-left hidden md:table-cell">Notes</th>
+                        <th class="py-3 px-4 text-center">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-300 text-gray-900">
+
+                <tbody class="text-gray-800">
                     @forelse($units as $unit)
-                    <tr class="hover:bg-gray-200 transition">
-                        <td class="px-4 py-3 text-center">{{ $unit->id }}</td>
-                        <td class="px-4 py-3">{{ $unit->property->name ?? '-' }}</td>
-                        <td class="px-4 py-3">{{ $unit->unit_code }}</td>
-                        <td class="px-4 py-3">{{ $unit->type ?? '-' }}</td>
-                        <td class="px-4 py-3 text-center">{{ $unit->area ?? '-' }}</td>
-                        <td class="px-4 py-3 text-right">Rp {{ number_format($unit->monthly_price, 2, ',', '.') }}</td>
-                        <td class="px-4 py-3 text-right">Rp {{ number_format($unit->deposit_amount, 2, ',', '.') }}</td>
-                        <td class="px-4 py-3 text-center">
+                    <tr class="border-b hover:bg-gray-50 transition">
+
+                        <td class="py-3 px-4">
+                            <div class="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center font-semibold">
+                                {{ $unit->id }}
+                            </div>
+                        </td>
+
+                        <td class="py-3 px-4">{{ $unit->property->name ?? '-' }}</td>
+                        <td class="py-3 px-4">{{ $unit->unit_code }}</td>
+                        <td class="py-3 px-4">{{ $unit->type ?? '-' }}</td>
+                        <td class="py-3 px-4">{{ $unit->area ?? '-' }} m²</td>
+
+                        <td class="py-3 px-4">
+                            Rp {{ number_format($unit->monthly_price, 2, ',', '.') }}
+                        </td>
+
+                        <td class="py-3 px-4">
+                            Rp {{ number_format($unit->deposit_amount, 2, ',', '.') }}
+                        </td>
+
+                        <td class="py-3 px-4">
                             @if(strtolower($unit->status) === 'available')
-                                <span class="bg-green-200 text-green-700 px-2 py-1 rounded-full text-xs">Available</span>
+                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-md text-xs">
+                                    Available
+                                </span>
                             @elseif(strtolower($unit->status) === 'occupied')
-                                <span class="bg-red-200 text-red-700 px-2 py-1 rounded-full text-xs">Occupied</span>
+                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-md text-xs">
+                                    Occupied
+                                </span>
                             @else
-                                <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs">{{ ucfirst($unit->status) }}</span>
+                                <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs">
+                                    {{ ucfirst($unit->status) }}
+                                </span>
                             @endif
                         </td>
-                        <td class="px-4 py-3">{{ $unit->notes ?? '-' }}</td>
 
-                        {{-- Tombol Action --}}
-                        <td class="px-4 py-3 text-center">
-                            <div class="flex justify-center gap-2">
-                                {{-- View --}}
+                        <td class="py-3 px-4 hidden md:table-cell">
+                            {{ Str::limit($unit->notes, 40) ?? '-' }}
+                        </td>
+
+                        {{-- ACTION --}}
+                        <td class="py-3 px-4 text-center">
+                            <div class="flex items-center justify-center gap-2">
+
+                                {{-- VIEW --}}
                                 <a href="{{ route('property_units.show', $unit->id) }}"
-                                   class="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded-full shadow transition-transform transform hover:scale-110"
-                                   title="View">
+                                    class="px-2 py-1 border rounded-md hover:bg-gray-100 text-gray-700">
                                     👁
                                 </a>
 
-                                {{-- Edit --}}
+                                {{-- EDIT --}}
                                 <a href="{{ route('property_units.edit', $unit->id) }}"
-                                   class="bg-yellow-400 hover:bg-yellow-300 text-black p-2 rounded-full shadow transition-transform transform hover:scale-110"
-                                   title="Edit">
-                                    ✏
+                                    class="px-2 py-1 border rounded-md hover:bg-gray-100 text-yellow-600">
+                                    ✏️
                                 </a>
 
-                                {{-- Delete --}}
-                                <form action="{{ route('property_units.destroy', $unit->id) }}" method="POST"
-                                      onsubmit="return confirm('Yakin ingin hapus property unit ini?')">
+                                {{-- DELETE --}}
+                                <form action="{{ route('property_units.destroy', $unit->id) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('Hapus unit ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                            class="bg-red-500 hover:bg-red-400 text-white p-2 rounded-full shadow transition-transform transform hover:scale-110"
-                                            title="Delete">
+                                        class="px-2 py-1 border rounded-md hover:bg-gray-100 text-red-600">
                                         🗑
                                     </button>
                                 </form>
+
                             </div>
                         </td>
+
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="10" class="px-4 py-3 text-center text-gray-600">
+                        <td colspan="13" class="text-center py-5 text-gray-500">
                             Tidak ada property unit.
                         </td>
                     </tr>
@@ -112,35 +170,12 @@
             </table>
         </div>
 
-        {{-- Paginasi --}}
-        <div class="mt-4 flex justify-center">
+        {{-- PAGINATION --}}
+        <div class="mt-5">
             {{ $units->links() }}
         </div>
+
     </div>
 </div>
+
 @endsection
-
-@push('style')
-<style>
-    table th, table td {
-        white-space: nowrap;
-        vertical-align: middle;
-    }
-
-    /* Kolom action dikunci lebarnya */
-    table th:last-child, table td:last-child {
-        width: 140px;
-        text-align: center;
-    }
-</style>
-@endpush
-
-@push('scripts')
-<script>
-    $(document).ready(function() {
-        $('#datatable').DataTable({
-            "pageLength": 10
-        });
-    });
-</script>
-@endpush
