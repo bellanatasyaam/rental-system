@@ -1,19 +1,22 @@
 {{-- resources/views/properties/index.blade.php --}}
 <x-app-layout>
 
-    {{-- HEADER ATAS --}}
-    <div class="w-full bg-white py-4 shadow-sm border-b">
+    {{-- HEADER --}}
+    <div class="w-full bg-white py-5 shadow-sm border-b">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6">
-            <h1 class="text-xl font-bold text-gray-700">Properties</h1>
+            <div>
+                <h1 class="text-2xl font-semibold text-gray-800">Properties</h1>
+                <p class="text-sm text-gray-500">Kelola data properti yang tersedia.</p>
+            </div>
 
             <div class="flex items-center gap-3">
                 <a href="{{ url('/admin/dashboard') }}"
-                   class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300">
+                    class="px-3 py-1.5 border border-gray-300 text-gray-600 rounded-md text-sm hover:bg-gray-100">
                     ← Back
                 </a>
 
                 <a href="{{ route('properties.create') }}"
-                   class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 shadow-sm">
                     + Add Property
                 </a>
             </div>
@@ -21,105 +24,123 @@
     </div>
 
 
+    {{-- MAIN CONTENT --}}
     <div class="max-w-7xl mx-auto px-6 mt-8">
 
-        {{-- ALERT --}}
+        {{-- SUCCESS ALERT --}}
         @if(session('success'))
-        <div class="bg-green-500 text-white p-3 rounded-lg shadow mb-4">
+        <div class="bg-green-500 text-white p-3 rounded-md shadow mb-4">
             {{ session('success') }}
         </div>
         @endif
 
+        {{-- CARD --}}
+        <div class="bg-white border rounded-lg shadow-sm p-5">
 
-        {{-- TABLE --}}
-        <div class="bg-white border rounded-xl shadow overflow-x-auto">
+            {{-- TOOLBAR --}}
+            <div class="flex items-center justify-between mb-4">
+                <div class="text-sm bg-blue-100 text-blue-600 px-3 py-1 rounded-md">
+                    Total: <strong>{{ $properties->total() }}</strong>
+                </div>
 
-            <table class="w-full table-auto">
-                <thead class="bg-blue-600 text-white text-sm uppercase">
-                    <tr>
-                        <th class="px-4 py-3">ID</th>
-                        <th class="px-4 py-3">Code</th>
-                        <th class="px-4 py-3">Name</th>
-                        <th class="px-4 py-3">Address</th>
-                        <th class="px-4 py-3">Type</th>
-                        <th class="px-4 py-3">Total Area</th>
-                        <th class="px-4 py-3">Active</th>
-                        <th class="px-4 py-3 text-center w-40">Action</th>
-                    </tr>
-                </thead>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center border rounded-md px-3 py-2 bg-white w-64">
+                        <input type="text" placeholder="Search..." class="w-full border-none focus:ring-0 text-sm">
+                    </div>
+                </div>
+            </div>
 
-                <tbody class="text-gray-900 text-sm">
+            {{-- TABLE --}}
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse text-sm">
+                    <thead>
+                        <tr class="border-b bg-gray-50 text-gray-600 text-xs uppercase">
+                            <th class="py-3 px-4 text-left">ID</th>
+                            <th class="py-3 px-4 text-left">Code</th>
+                            <th class="py-3 px-4 text-left">Name</th>
+                            <th class="py-3 px-4 text-left">Address</th>
+                            <th class="py-3 px-4 text-left">Type</th>
+                            <th class="py-3 px-4 text-left">Area</th>
+                            <th class="py-3 px-4 text-center">Active</th>
+                            <th class="py-3 px-4 text-center">Action</th>
+                        </tr>
+                    </thead>
 
-                    @forelse($properties as $property)
-                    <tr class="border-t hover:bg-gray-100 transition">
-                        <td class="px-4 py-3 text-center">{{ $property->id }}</td>
-                        <td class="px-4 py-3">{{ $property->code }}</td>
-                        <td class="px-4 py-3 font-semibold">{{ $property->name }}</td>
-                        <td class="px-4 py-3">{{ Str::limit($property->address, 40) }}</td>
-                        <td class="px-4 py-3 text-center">{{ $property->type }}</td>
-                        <td class="px-4 py-3 text-center">{{ $property->total_area }}</td>
+                    <tbody class="text-gray-800">
+                        @forelse($properties as $property)
+                        <tr class="border-b hover:bg-gray-50 transition">
 
-                        <td class="px-4 py-3 text-center">
-                            @if($property->is_active)
-                                <span class="bg-green-200 text-green-700 px-2 py-1 rounded-full text-xs">Active</span>
-                            @else
-                                <span class="bg-red-200 text-red-700 px-2 py-1 rounded-full text-xs">Inactive</span>
-                            @endif
-                        </td>
+                            <td class="py-3 px-4">{{ $property->id }}</td>
+                            <td class="py-3 px-4">{{ $property->code }}</td>
 
-                        {{-- ACTION --}}
-                        <td class="px-4 py-3 text-center">
-                            <div class="flex justify-center gap-2">
+                            <td class="py-3 px-4">
+                                <div class="font-semibold">{{ $property->name }}</div>
+                                <div class="text-xs text-gray-500">
+                                    {{ Str::limit($property->address, 25) }}
+                                </div>
+                            </td>
 
-                                {{-- Detail --}}
-                                <a href="{{ route('properties.show', $property->id) }}"
-                                   class="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded-full shadow"
-                                   title="Detail">
-                                    👁
-                                </a>
+                            <td class="py-3 px-4 hidden md:table-cell">{{ $property->address }}</td>
 
-                                {{-- Edit --}}
-                                <a href="{{ route('properties.edit', $property->id) }}"
-                                   class="bg-yellow-400 hover:bg-yellow-300 text-black p-2 rounded-full shadow"
-                                   title="Edit">
-                                    ✏
-                                </a>
+                            <td class="py-3 px-4 hidden md:table-cell">{{ $property->type }}</td>
 
-                                {{-- Delete --}}
-                                <form action="{{ route('properties.destroy', $property->id) }}"
-                                      method="POST"
-                                      onsubmit="return confirm('Hapus property ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="bg-red-500 hover:bg-red-400 text-white p-2 rounded-full shadow"
-                                            title="Delete">
-                                        🗑
-                                    </button>
-                                </form>
+                            <td class="py-3 px-4 hidden md:table-cell">
+                                {{ $property->total_area }}
+                            </td>
 
-                            </div>
-                        </td>
-                    </tr>
+                            <td class="py-3 px-4 text-center">
+                                @if($property->is_active)
+                                    <span class="bg-green-200 text-green-700 px-2 py-1 rounded-full text-xs">Active</span>
+                                @else
+                                    <span class="bg-red-200 text-red-700 px-2 py-1 rounded-full text-xs">Inactive</span>
+                                @endif
+                            </td>
 
-                    @empty
-                    <tr>
-                        <td colspan="8" class="px-4 py-3 text-center text-gray-600">
-                            Tidak ada property.
-                        </td>
-                    </tr>
-                    @endforelse
+                            <td class="py-3 px-4 text-center">
+                                <div class="flex justify-center gap-2">
 
-                </tbody>
-            </table>
+                                    {{-- EDIT --}}
+                                    <a href="{{ route('properties.edit', $property->id) }}"
+                                        class="px-2 py-1 border rounded-md hover:bg-gray-100 text-gray-700">
+                                        ✏️
+                                    </a>
 
-        </div>
+                                    {{-- DELETE --}}
+                                    <form action="{{ route('properties.destroy', $property->id) }}" method="POST"
+                                          onsubmit="return confirm('Hapus property ini?')">
+                                        @csrf @method('DELETE')
+                                        <button class="px-2 py-1 border rounded-md hover:bg-gray-100 text-red-600">
+                                            🗑️
+                                        </button>
+                                    </form>
 
-        {{-- Pagination --}}
-        <div class="mt-4 flex justify-center">
-            {{ $properties->links() }}
-        </div>
+                                    {{-- VIEW --}}
+                                    <a href="{{ route('properties.show', $property->id) }}"
+                                        class="px-2 py-1 border rounded-md hover:bg-gray-100 text-gray-700">
+                                        🔍
+                                    </a>
 
+                                </div>
+                            </td>
+
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-gray-500">
+                                No properties found.
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- PAGINATION --}}
+            <div class="mt-5">
+                {{ $properties->links() }}
+            </div>
+
+        </div> {{-- END CARD --}}
     </div>
 
 </x-app-layout>
