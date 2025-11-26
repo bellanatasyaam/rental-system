@@ -16,17 +16,11 @@ class Contract extends Model
         'start_date',
         'end_date',
         'monthly_rent',
-        'deposit_amount', // ✅ cukup pakai ini
+        'deposit_amount',
         'payment_due_day',
         'status'
     ];
 
-    // public function unit()
-    // {
-    //     return $this->belongsTo(PropertyUnit::class, 'property_unit_id');
-    // }
-
-    // Relasi ke tenant
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);
@@ -37,14 +31,14 @@ class Contract extends Model
         return $this->hasMany(Payment::class);
     }
 
-    // // Relasi ke property unit
-    // public function unit()
-    // {
-    //     return $this->belongsTo(PropertyUnit::class, 'property_unit_id'); // pastikan kolom foreign key sesuai di tabel contracts
-    // }
-
     public function propertyUnit()
     {
         return $this->belongsTo(PropertyUnit::class);
     }
+
+    public function unit()
+    {
+        return $this->belongsTo(PropertyUnit::class, 'property_unit_id');
+    }
+
 }
