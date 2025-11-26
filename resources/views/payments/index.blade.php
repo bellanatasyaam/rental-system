@@ -25,7 +25,7 @@
         {{-- Alert sukses --}}
         @if(session('success'))
         <div class="bg-green-600 text-white p-3 rounded-lg shadow mb-4">
-            {{ session('success') }}
+            {{ session('successA') }}
         </div>
         @endif
 
@@ -47,7 +47,9 @@
                     @forelse($payments as $payment)
                     <tr class="hover:bg-gray-200 transition">
                         <td class="px-4 py-3 text-center">{{ $payment->id }}</td>
-                        <td class="px-4 py-3 font-semibold">{{ $payment->contract->tenant_name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 font-semibold">
+                            {{ $payment->contract?->tenant?->name ?? 'N/A' }}
+                        </td>
                         <td class="px-4 py-3 text-center">{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
                         <td class="px-4 py-3 text-center">Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
                         <td class="px-4 py-3 text-center capitalize">{{ $payment->method }}</td>

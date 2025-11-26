@@ -10,7 +10,7 @@ class PaymentController extends Controller
 {
     public function index()
     {
-        $payments = Payment::with('contract')->paginate(10);
+        $payments = Payment::with(['contract.tenant'])->paginate(10);
         return view('payments.index', compact('payments'));
     }
 
