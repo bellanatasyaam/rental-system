@@ -100,15 +100,35 @@ class PropertyUnitController extends Controller
             })
             ->get()
             ->map(function ($unit) {
-                // Cek apakah ada kontrak aktif
+
+                // Simpan status asli dari DB
+                $originalStatus = strtolower($unit->status);
+
+                // Kalau maintenance → jangan diapa-apain
+                if ($originalStatus === 'maintenance') {
+                    $unit->status = 'maintenance';
+                    return $unit;
+                }
+
+                // Kalau nonaktif → jangan diapa-apain
+                if ($originalStatus === 'nonaktif') {
+                    $unit->status = 'nonaktif';
+                    return $unit;
+                }
+
+                // Cek kontrak aktif
                 $activeContract = $unit->contracts
                     ->where('status', 'active')
                     ->where('start_date', '<=', now())
                     ->where('end_date', '>=', now())
                     ->first();
 
-                // Kalau ada kontrak aktif, status occupied
-                $unit->status = $activeContract ? 'occupied' : 'available';
+                // Kalau ada kontrak aktif → occupied
+                if ($activeContract) {
+                    $unit->status = 'occupied';
+                }
+
+                // Kalau tidak ada kontrak, biarkan status dari database
                 return $unit;
             });
 
